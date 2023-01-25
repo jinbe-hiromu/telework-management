@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WorkScheduler.Views.SchedulerView"
+             xmlns:scheduler="clr-namespace:Syncfusion.Maui.Scheduler;assembly=Syncfusion.Maui.Scheduler"
+             xmlns:local="clr-namespace:WorkScheduler.Views"
+             xmlns:vm="clr-namespace:WorkScheduler.ViewModels"
+             Title="SchedulerView">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+
+        <scheduler:SfScheduler View="Week"
+                               AllowedViews="Day,WorkWeek,Month"
+                               AppointmentsSource="{Binding SchedulerEvents}"
+                               Grid.Row="0">
+            <scheduler:SfScheduler.BindingContext>
+                <vm:SchedulerViewModel/>
+            </scheduler:SfScheduler.BindingContext>
+        </scheduler:SfScheduler>
+
+        <HorizontalStackLayout Spacing="20" Grid.Row="1" VerticalOptions="Center" HorizontalOptions="End" Margin="5">
+            <Button Text="新規"/>
+            <Button Text="編集"/>
+            <Button Text="削除"/>
+        </HorizontalStackLayout>
+    </Grid>
+
+
+
+</ContentPage>
