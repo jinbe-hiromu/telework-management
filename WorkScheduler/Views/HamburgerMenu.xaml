@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:WorkScheduler.ViewModels"
+             x:Class="WorkScheduler.Views.HamburgerMenu"
+             Title="HamburgerMenu">
+
+
+    <ContentPage.BindingContext>
+        <local:HamburgerMenuViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.MenuBarItems>
+        <MenuBarItem Text="予定">
+        </MenuBarItem>
+        <MenuBarItem Text="実績">
+        </MenuBarItem>
+        <MenuBarItem Text="ログアウト">
+            <MenuFlyoutItem Text="ログアウトしますか？" />
+        </MenuBarItem>
+        
+        <MenuBarItem 
+            />
+    </ContentPage.MenuBarItems>
+
+    <Button
+        Text="予定"
+        Command="{Binding SchedulePage}"
+        />
+
+</ContentPage>
