@@ -1,6 +1,7 @@
 ﻿using static System.Net.Mime.MediaTypeNames;
 using System.Threading.Tasks;
 using System.Threading;
+using WorkScheduler.Views;
 
 namespace WorkScheduler;
 
@@ -26,10 +27,12 @@ public partial class MainPage : ContentPage
 	}
 
 	// DELETE ME
-	private void OnTempClicked(object sender, EventArgs e)
+	private async void OnTempClicked(object sender, EventArgs e)
 	{
 		var toast = CommunityToolkit.Maui.Alerts.Toast.Make("TEST TOAST!!");
 		_ = toast.Show(CancellationToken.None);
+		await Shell.Current.Navigation.PushModalAsync(new InputDetails());
+
 	}
 }
 
