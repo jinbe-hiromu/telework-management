@@ -20,9 +20,7 @@
         <scheduler:SfScheduler View="Week"
                                AllowedViews="Day,WorkWeek,Month"
                                AppointmentsSource="{Binding SchedulerEvents}"
-                               Grid.Row="0"
-                               SelectedDate="{Binding SelectedDate}"
-                               DisplayDate="{Binding DisplayDate}"/>
+                               Grid.Row="0"/>
 
         <HorizontalStackLayout Spacing="20" Grid.Row="1" VerticalOptions="Center" HorizontalOptions="End" Margin="5">
             <Button Text="新規" Command="{Binding AddNewScheduleCommand}"/>
