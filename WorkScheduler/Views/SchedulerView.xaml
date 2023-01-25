@@ -7,6 +7,10 @@
              xmlns:vm="clr-namespace:WorkScheduler.ViewModels"
              Title="SchedulerView">
 
+    <ContentPage.BindingContext>
+        <vm:SchedulerViewModel/>
+    </ContentPage.BindingContext>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -17,13 +21,13 @@
                                AllowedViews="Day,WorkWeek,Month"
                                AppointmentsSource="{Binding SchedulerEvents}"
                                Grid.Row="0">
-            <scheduler:SfScheduler.BindingContext>
+            <!--<scheduler:SfScheduler.BindingContext>
                 <vm:SchedulerViewModel/>
-            </scheduler:SfScheduler.BindingContext>
+            </scheduler:SfScheduler.BindingContext>-->
         </scheduler:SfScheduler>
 
         <HorizontalStackLayout Spacing="20" Grid.Row="1" VerticalOptions="Center" HorizontalOptions="End" Margin="5">
-            <Button Text="新規"/>
+            <Button Text="新規" Command="{Binding AddNewScheduleCommand}"/>
             <Button Text="編集"/>
             <Button Text="削除"/>
         </HorizontalStackLayout>

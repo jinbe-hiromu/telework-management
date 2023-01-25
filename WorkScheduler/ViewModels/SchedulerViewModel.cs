@@ -1,4 +1,6 @@
-﻿using Syncfusion.Maui.Scheduler;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Syncfusion.Maui.Scheduler;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,15 +10,14 @@ using System.Threading.Tasks;
 
 namespace WorkScheduler.ViewModels
 {
-    public class SchedulerViewModel
+    internal partial class SchedulerViewModel : ObservableObject
     {
-        public ObservableCollection<SchedulerAppointment> SchedulerEvents { get; set; }
-        public SchedulerViewModel()
+        public ObservableCollection<SchedulerAppointment> SchedulerEvents { get; set; } = new ObservableCollection<SchedulerAppointment>();
+
+        [RelayCommand]
+        private void AddNewSchedule()
         {
-            SchedulerEvents = new ObservableCollection<SchedulerAppointment>
-            {
-                new SchedulerAppointment {StartTime=new DateTime(2023, 1, 23, 18,0,0),EndTime=new DateTime(2023, 1, 23, 20, 0,0),Subject="テスト"}
-            };
+            SchedulerEvents.Add(new SchedulerAppointment { StartTime = new DateTime(2023, 1, 25, 18, 0, 0), EndTime = new DateTime(2023, 1, 25, 20, 0, 0), Subject = "テスト" });
         }
     }
 }
