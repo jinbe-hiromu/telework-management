@@ -47,7 +47,7 @@
     <FlyoutItem Title="スケジュール">
         <ShellContent
                 Title="予定"
-                ContentTemplate="{DataTemplate view:InputDetails}" />
+                ContentTemplate="{DataTemplate view:SchedulerView}" />
 
         <ShellContent
                 Title="実績"

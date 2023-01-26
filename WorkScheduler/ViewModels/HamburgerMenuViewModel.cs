@@ -16,5 +16,9 @@ namespace WorkScheduler.ViewModels
         {
 
         }
+
+        //public Command RogOutCommand { get; }
+        //private Command<Button> _rogOutCommand;
+
     }
 }

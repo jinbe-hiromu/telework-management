@@ -22,10 +22,21 @@
         <MenuBarItem 
             />
     </ContentPage.MenuBarItems>-->
+    <!--<ScrollView>
+        <VerticalStackLayout 
+            Spacing="25" 
+            Padding="30,0" 
+            VerticalOptions="Center">
 
-    <Button
-        Text="予定"
+            <Button Text="ログアウト" 
+                Command="{Binding RogOutCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>-->
+    
+    <!--<Button
+        Text="ログアウト"
         Command="{Binding SchedulePage}"
-        />
+        />-->
 
 </ContentPage>
