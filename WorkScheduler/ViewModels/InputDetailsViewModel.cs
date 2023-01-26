@@ -1,17 +1,6 @@
-using CommunityToolkit.Maui.Views;
-using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 
 namespace WorkScheduler.ViewModels;
-
-//public interface IInputDetails
-//{
-//	public DateTime Date { get; }
-//	public DateTime StartTime { get; } 
-//	public DateTime EndTime { get; } 
-//	public string WorkStyle { get; }  
-//	public string WorkingPlace { get; }
-//}
 
 public class InputDetailsContact
 {
