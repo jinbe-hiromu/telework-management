@@ -7,6 +7,11 @@
     xmlns:view="clr-namespace:WorkScheduler.Views"
     Shell.FlyoutBehavior="Disabled">
 
+    <!--<ShellContent
+        Title="Home"
+        ContentTemplate="{DataTemplate view:InputDetails}"
+        Route="InputDetails" />-->
+
     <ShellContent
         Title="Home"
         ContentTemplate="{DataTemplate view:SchedulerView}"

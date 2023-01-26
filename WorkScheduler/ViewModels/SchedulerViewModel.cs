@@ -1,37 +1,80 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Syncfusion.Maui.Scheduler;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WorkScheduler.Views;
 
 namespace WorkScheduler.ViewModels
 {
+    [QueryProperty(nameof(InputData), "SchedulerAppointment")]
     internal partial class SchedulerViewModel : ObservableObject
     {
-        //public event EventHandler<SchedulerDoubleTappedEventArgs> Change;
+        public SchedulerAppointment InputData
+        {
+            set
+            {
+                SchedulerEvents.Add(value);
+            }
+        }
+
+        private Command<SchedulerTappedEventArgs> _tappedCommand;
+
+        public Command<SchedulerTappedEventArgs> TappedCommand
+        {
+            get { return _tappedCommand; }
+            set { _tappedCommand = value; }
+        }
+
+        //private Command _tappedCommand;
+
+        //public Command TappedCommand
+        //{
+        //    get { return _tappedCommand; }
+        //    set { _tappedCommand = value; }
+        //}
 
         public ObservableCollection<SchedulerAppointment> SchedulerEvents { get; set; } = new ObservableCollection<SchedulerAppointment>();
 
         public SchedulerViewModel()
         {
-            //Change += OnSchedulerDoubleTapped;
+            TappedCommand = new Command<SchedulerTappedEventArgs>(OnSchedulerTapped);
         }
 
         [RelayCommand]
-        private void AddNewSchedule()
+        private async void AddNewSchedule()
         {
-            SchedulerEvents.Add(new SchedulerAppointment { StartTime = new DateTime(2023, 1, 25, 18, 0, 0), EndTime = new DateTime(2023, 1, 25, 20, 0, 0), Subject = "テスト" });
+            await Shell.Current.GoToAsync(nameof(InputDetails));
         }
 
-        private void OnSchedulerDoubleTapped(object sender, SchedulerDoubleTappedEventArgs e)
+        private void OnSchedulerTapped(SchedulerTappedEventArgs e)
         {
-            var appointments = e.Appointments;
-            var selectedDate = e.Date;
-            var schedulerElement = e.Element;
+            if (e is not null)
+            {
+                var appointments = e.Appointments;
+                var selectedDate = e.Date;
+                var schedulerElement = e.Element;
+            }
         }
+
+        //private void OnSchedulerTapped(object sender)
+        //{
+        //    if (e is not null)
+        //    {
+        //        var appointments = e.Appointments;
+        //        var selectedDate = e.Date;
+        //        var schedulerElement = e.Element;
+        //    }
+        //}
+
+        //private void OnSchedulerTapped(object obj)
+        //{
+        //    if (obj is not null)
+        //    {
+        //        var eventArgs = obj as SchedulerTappedEventArgs;
+        //        var appointments = eventArgs.Appointments;
+        //        var selectedDate = eventArgs.Date;
+        //        var schedulerElement = eventArgs.Element;
+        //    }
+        //}
     }
 }
