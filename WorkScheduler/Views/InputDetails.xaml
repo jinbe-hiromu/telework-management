@@ -2,11 +2,24 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="WorkScheduler.Views.InputDetails"
+             xmlns:vm="clr-namespace:WorkScheduler.ViewModels"
              Title="InputDetails">
+    <ContentPage.BindingContext>
+        <vm:InputDetailsViewModel />
+    </ContentPage.BindingContext>
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <Label Text="いつ" VerticalOptions="Start" HorizontalOptions="Start" />
+        <DatePicker Date="{Binding Date}"/>
+        <Label Text="時間 開始‐終了" VerticalOptions="Start" HorizontalOptions="Start" />
+        <TimePicker Time="{Binding StartTime}"/>
+        <TimePicker Time="{Binding EndTime}"/>
+        <Label Text="状態" VerticalOptions="Start" HorizontalOptions="Start" />
+        <Picker ItemsSource="{Binding WorkStyles}" SelectedItem="{Binding SelectedWorkStyle}"/>
+        <Label Text="場所" VerticalOptions="Start" HorizontalOptions="Start" />
+        <Picker ItemsSource="{Binding WorkingPlaces}" SelectedItem="{Binding SelectedWorkingPlace}"/>
+        <HorizontalStackLayout>
+            <Button Text="Cancel" Command="{Binding CancelCommand}" VerticalOptions="Start"/>
+            <Button Text="OK" Command="{Binding OkCommand}" VerticalOptions="End"/>
+        </HorizontalStackLayout>
     </VerticalStackLayout>
 </ContentPage>
