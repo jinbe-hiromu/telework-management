@@ -1,0 +1,60 @@
+{
+  "dataSources": [
+    "WorkScheduleDB"
+  ],
+  "generator": "@radzen/blazor-server",
+  "https": false,
+  "layouts": [
+    "Login",
+    "Main"
+  ],
+  "logo": "",
+  "name": "WorkScheduleServer",
+  "navigation": [
+    "Acounts",
+    "Action Items",
+    "Work Schedules"
+  ],
+  "pages": [
+    "Acounts",
+    "Add Acount",
+    "Edit Acount",
+    "Action Items",
+    "Add Action Item",
+    "Edit Action Item",
+    "Work Schedules",
+    "Add Work Schedule",
+    "Edit Work Schedule",
+    "Edit Application User",
+    "Add Application User",
+    "Application Roles",
+    "Profile",
+    "Application Users",
+    "Add Application Role",
+    "Login",
+    "Unauthorized",
+    "Register Application User"
+  ],
+  "security": {
+    "autoGeneratePages": true,
+    "dataSource": "WorkScheduleDB",
+    "duration": 5,
+    "emailConfirmation": false,
+    "layout": "Main",
+    "loginLayout": "Login",
+    "overwriteExistingPages": true,
+    "provider": "default",
+    "sessionRefresh": false,
+    "smtpFrom": "",
+    "smtpPassword": "",
+    "smtpSSL": false,
+    "smtpServer": "",
+    "smtpUser": "",
+    "loginPage": "Login"
+  },
+  "serverLang": "cs",
+  "serverProject": true,
+  "serverVersion": "6",
+  "startPage": "Acounts",
+  "theme": "standard"
+}
