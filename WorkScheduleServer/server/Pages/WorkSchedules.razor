@@ -1,0 +1,48 @@
+﻿@page "/work-schedules"
+@layout MainLayout
+@inherits WorkScheduleServer.Pages.WorkSchedulesComponent
+
+@using Radzen
+@using Radzen.Blazor
+@using WorkScheduleServer.Models.WorkScheduleDb
+@using Microsoft.AspNetCore.Identity;
+@using WorkScheduleServer.Models
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+<PageTitle>Work Schedules</PageTitle>
+<RadzenContent Container="main">
+  <ChildContent>
+    <RadzenHeading Size="H1" Text="Work Schedules">
+    </RadzenHeading>
+    <div class="row">
+      <div class="col-md-12">
+        <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Add" Click="@Button0Click">
+        </RadzenButton>
+        <RadzenSplitButton Icon="get_app" style="margin-left: 10px; margin-bottom: 10px" Text="Export" Click="@Splitbutton0Click">
+          <ChildContent>
+            <RadzenSplitButtonItem Text="Excel" Value="xlsx">
+            </RadzenSplitButtonItem>
+            <RadzenSplitButtonItem Text="CSV" Value="csv">
+            </RadzenSplitButtonItem>
+          </ChildContent>
+        </RadzenSplitButton>
+        <RadzenDataGrid @ref="grid0" AllowFiltering="true" FilterMode="Radzen.FilterMode.Advanced" AllowPaging="true" AllowSorting="true" Data="@getWorkSchedulesResult" TItem="WorkScheduleServer.Models.WorkScheduleDb.WorkSchedule" RowSelect="@Grid0RowSelect">
+          <Columns>
+            <RadzenDataGridColumn TItem="WorkScheduleServer.Models.WorkScheduleDb.WorkSchedule" Property="Id" Title="Id">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="WorkScheduleServer.Models.WorkScheduleDb.WorkSchedule" Property="User" Title="User">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="WorkScheduleServer.Models.WorkScheduleDb.WorkSchedule" Property="Action1" Title="Action">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="WorkScheduleServer.Models.WorkScheduleDb.WorkSchedule" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+              <Template Context="workScheduleServerModelsWorkScheduleDbWorkSchedule">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@((args) =>GridDeleteButtonClick(args, workScheduleServerModelsWorkScheduleDbWorkSchedule))" @onclick:stopPropagation="true">
+                </RadzenButton>
+              </Template>
+            </RadzenDataGridColumn>
+          </Columns>
+        </RadzenDataGrid>
+      </div>
+    </div>
+  </ChildContent>
+</RadzenContent>
