@@ -9,10 +9,10 @@
     </ContentPage.BindingContext>
     <VerticalStackLayout>
         <Label Text="いつ" VerticalOptions="Start" HorizontalOptions="Start" />
-        <DatePicker Date="{Binding Date}"/>
+        <DatePicker Date="{Binding SelectedDate}"/>
         <Label Text="時間 開始‐終了" VerticalOptions="Start" HorizontalOptions="Start" />
-        <TimePicker Time="{Binding StartTime}"/>
-        <TimePicker Time="{Binding EndTime}"/>
+        <TimePicker Time="{Binding SelectedStartTime}"/>
+        <TimePicker Time="{Binding SelectedEndTime}"/>
         <Label Text="状態" VerticalOptions="Start" HorizontalOptions="Start" />
         <Picker ItemsSource="{Binding WorkStyles}" SelectedItem="{Binding SelectedWorkStyle}"/>
         <Label Text="場所" VerticalOptions="Start" HorizontalOptions="Start" />
