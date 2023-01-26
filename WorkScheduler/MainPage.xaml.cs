@@ -34,5 +34,10 @@ public partial class MainPage : ContentPage
 		await Shell.Current.Navigation.PushModalAsync(new InputDetails());
 
 	}
+
+	private async void OnTempClicked2(object sender, EventArgs e)
+	{
+		await Shell.Current.Navigation.PushModalAsync(new LoginView());
+	}
 }
 
