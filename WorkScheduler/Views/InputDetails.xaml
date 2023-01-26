@@ -19,7 +19,7 @@
         <Picker ItemsSource="{Binding WorkingPlaces}" SelectedItem="{Binding SelectedWorkingPlace}"/>
         <HorizontalStackLayout>
             <Button Text="Cancel" Command="{Binding CancelCommand}" VerticalOptions="Start"/>
-            <Button Text="OK" Command="{Binding OkCommand}" VerticalOptions="End"/>
+            <Button Text="OK" Command="{Binding OkClickedCommand}" VerticalOptions="End"/>
         </HorizontalStackLayout>
     </VerticalStackLayout>
 </ContentPage>
