@@ -1,7 +1,6 @@
-using Microsoft.Maui.Controls;
+using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace WorkScheduler.ViewModels;
 
@@ -46,7 +45,10 @@ public class InputDetailsViewModel : BindableObject
 		WorkStyle= _workStyleGoingToWork,
 		WorkingPlace = _workingPlaceAgui,
 	};
-	public DateTime Date { get; set; }
+
+	public event Action<object> CloseRequested;
+	public Size Size { get; } = new Size(500, 400);
+ 	public DateTime Date { get; set; }
 	public DateTime StartTime { get; set; } 
 	public DateTime EndTime { get; set; } 
 	public ObservableCollection<string> WorkStyles { get; } = new();
@@ -101,13 +103,20 @@ public class InputDetailsViewModel : BindableObject
 		SelectedWorkingPlace = WorkingPlaces.First();
     }
 
-	private void OnCancelClicked(object _)
+	private void OnCancelClicked()
 	{
-
+		CloseRequested.Invoke(new());
 	}
 
-	private void OnOkClicked(object _)
+	private void OnOkClicked()
 	{
-
+		CloseRequested.Invoke(new InputDetailsContact
+		{
+			Date= Date,
+			StartTime= StartTime,
+			EndTime= EndTime,
+			WorkStyle = SelectedWorkStyle,
+			WorkingPlace = SelectedWorkingPlace,
+		});
 	}
 }
