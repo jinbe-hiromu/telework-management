@@ -5,11 +5,63 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:WorkScheduler"
     xmlns:view="clr-namespace:WorkScheduler.Views"
-    Shell.FlyoutBehavior="Disabled">
+    xmlns:viewModels="clr-namespace:WorkScheduler.ViewModels"
+    Shell.FlyoutBehavior="Flyout">
 
-    <ShellContent
+    <!--<ShellContent
         Title="Home"
         ContentTemplate="{DataTemplate view:HamburgerMenu}"
-        Route="MainPage" />
+        Route="MainPage" />-->
 
+
+    <!--<TabBar Title="">
+        <Tab Title="MainTab" Route="MainTab">
+            <ShellContent
+                Title="Main"
+                ContentTemplate="{DataTemplate view:HamburgerMenu}"
+                Route="MainPage" />
+        </Tab>
+
+        <Tab Title="SubTab" Route="SubTab">
+            <ShellContent
+                Title="Sub"
+                ContentTemplate="{DataTemplate view:InputDetails}"
+                Shell.BackgroundColor="LightBlue"
+                Route="SubPage" />
+
+            <ShellContent
+                Title="Sub2"
+                ContentTemplate="{DataTemplate local:SubPage2}"
+                Shell.BackgroundColor="LightBlue"
+                Route="SubPage2" />
+        </Tab>
+    </TabBar>-->
+
+    <!--<FlyoutItem Title="MainMenu" Route="MainMenu">
+        <ShellContent
+                Title="Main"
+                ContentTemplate="{DataTemplate view:HamburgerMenu}"
+                Route="MainPage" />
+    </FlyoutItem>-->
+
+    <FlyoutItem Title="スケジュール" Route="SchedulMenu">
+        <ShellContent
+                Title="予定"
+                ContentTemplate="{DataTemplate view:InputDetails}"
+                Shell.BackgroundColor="LightBlue"
+                Route="SchedulPage" />
+
+        <ShellContent
+                Title="実績"
+                ContentTemplate="{DataTemplate view:DataQueryView}"
+                Shell.BackgroundColor="LightBlue"
+                Route="ResultsPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="ログアウト" Route="LogOutMenu">
+        <ShellContent
+                Title="ログアウト"
+                ContentTemplate="{DataTemplate view:HamburgerMenu}"
+                Route="LogOutPage" />
+    </FlyoutItem>
 </Shell>

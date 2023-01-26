@@ -70,9 +70,6 @@
 	  <MauiXaml Update="Views\HamburgerMenu.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\HamburgerMenuView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Views\InputDetails.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

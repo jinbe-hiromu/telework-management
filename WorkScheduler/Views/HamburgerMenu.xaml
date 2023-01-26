@@ -10,7 +10,7 @@
         <local:HamburgerMenuViewModel />
     </ContentPage.BindingContext>
 
-    <ContentPage.MenuBarItems>
+    <!--<ContentPage.MenuBarItems>
         <MenuBarItem Text="予定">
         </MenuBarItem>
         <MenuBarItem Text="実績">
@@ -21,7 +21,7 @@
         
         <MenuBarItem 
             />
-    </ContentPage.MenuBarItems>
+    </ContentPage.MenuBarItems>-->
 
     <Button
         Text="予定"
