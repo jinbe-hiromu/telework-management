@@ -29,9 +29,7 @@ public partial class MainPage : ContentPage
 	// DELETE ME
 	private async void OnTempClicked(object sender, EventArgs e)
 	{
-		var toast = CommunityToolkit.Maui.Alerts.Toast.Make("TEST TOAST!!");
-		_ = toast.Show(CancellationToken.None);
-		await Shell.Current.Navigation.PushModalAsync(new InputDetails());
+		await Shell.Current.Navigation.PushModalAsync(new InputDetailsCaller());
 
 	}
 }
