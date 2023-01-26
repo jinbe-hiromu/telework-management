@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Syncfusion.Maui.Scheduler;
 using System.Collections.ObjectModel;
@@ -18,14 +19,14 @@ namespace WorkScheduler.ViewModels;
 public class InputDetailsContact
 {
     public DateTime Date { get; init; }
-    public DateTime StartTime { get; init; }
-    public DateTime EndTime { get; init; }
+    public TimeSpan StartTime { get; init; }
+    public TimeSpan EndTime { get; init; }
     public string WorkStyle { get; init; }
     public string WorkingPlace { get; init; }
 }
 
 
-public partial class InputDetailsViewModel : BindableObject
+public partial class InputDetailsViewModel : ObservableObject
 {
     private static readonly string _workStyleGoingToWork = "oŽÐ";
     private static readonly string _workStyleBusinessTrip = "o’£";
@@ -43,14 +44,21 @@ public partial class InputDetailsViewModel : BindableObject
     private static InputDetailsContact DefaultContact => new InputDetailsContact
     {
         Date = DateTime.Now,
-        StartTime = new DateTime(2023, 1, 25, 8, 40, 0),
-        EndTime = new DateTime(2023, 1, 25, 17, 40, 0),
+        StartTime = new TimeSpan(8, 40, 0),
+        EndTime = new TimeSpan(17, 40, 0),
         WorkStyle = _workStyleGoingToWork,
         WorkingPlace = _workingPlaceAgui,
     };
-    public DateTime Date { get; set; }
-    public DateTime StartTime { get; set; }
-    public DateTime EndTime { get; set; }
+
+    [ObservableProperty]
+    private DateTime _selectedDate;
+
+    [ObservableProperty]
+    public TimeSpan _selectedStartTime;
+
+    [ObservableProperty]
+    public TimeSpan _selectedEndTime;
+
     public ObservableCollection<string> WorkStyles { get; } = new();
     private string _selectedWorkStyle;
     public string SelectedWorkStyle
@@ -81,9 +89,9 @@ public partial class InputDetailsViewModel : BindableObject
     public InputDetailsViewModel() : this(DefaultContact) { }
     public InputDetailsViewModel(InputDetailsContact contact)
     {
-        Date = contact.Date;
-        StartTime = contact.StartTime;
-        EndTime = contact.EndTime;
+        SelectedDate = contact.Date;
+        SelectedStartTime = contact.StartTime;
+        SelectedEndTime = contact.EndTime;
         WorkStyles.Add(_workStyleGoingToWork);
         WorkStyles.Add(_workStyleBusinessTrip);
         WorkStyles.Add(_workStyleTelework);
@@ -111,8 +119,8 @@ public partial class InputDetailsViewModel : BindableObject
     [RelayCommand]
     private async void OnOkClicked(object _)
     {
-        var startTime = new DateTime(Date.Year, Date.Month, Date.Day, StartTime.Hour, StartTime.Minute, StartTime.Second);
-        var endTime = new DateTime(Date.Year, Date.Month, Date.Day, EndTime.Hour, EndTime.Minute, EndTime.Second);
+        var startTime = new DateTime(SelectedDate.Year, SelectedDate.Month, SelectedDate.Day, SelectedStartTime.Hours, SelectedStartTime.Minutes, SelectedStartTime.Seconds);
+        var endTime = new DateTime(SelectedDate.Year, SelectedDate.Month, SelectedDate.Day, SelectedEndTime.Hours, SelectedEndTime.Minutes, SelectedEndTime.Seconds);
         var subject = $"{SelectedWorkStyle}({SelectedWorkingPlace})";
 
         var schedulerAppointment = new SchedulerAppointment
