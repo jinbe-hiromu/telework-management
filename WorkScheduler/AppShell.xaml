@@ -47,8 +47,7 @@
     <FlyoutItem Title="スケジュール">
         <ShellContent
                 Title="予定"
-                ContentTemplate="{DataTemplate view:InputDetails}"
-                />
+                ContentTemplate="{DataTemplate view:InputDetails}" />
 
         <ShellContent
                 Title="実績"
@@ -59,14 +58,13 @@
     <FlyoutItem Title="ログアウト">
         <ShellContent
                 Title="ログアウト"
-                ContentTemplate="{DataTemplate view:HamburgerMenu}"
-                />
+                ContentTemplate="{DataTemplate view:HamburgerMenu}" />
     </FlyoutItem>
 
-    <!--<MenuItem Text="Help"
-              IconImageSource="help.png"
-              Command="{Binding HelpCommand}"
-              />-->
+    <!--<MenuItem Text="Log Out"
+              Command="{Binding LogOutCommand}"
+              CommandParameter=""
+              Clicked="{RogOutButton_Clicked}" />-->
 
 
 </Shell>
