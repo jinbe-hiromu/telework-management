@@ -1,19 +1,26 @@
-﻿using System.Diagnostics;
+﻿
+using WorkScheduler.Views;
 
 namespace WorkScheduler;
 
 public partial class AppShell : Shell
 {
-	public AppShell()
-	{
-		InitializeComponent();
-	}
- //   public Command LogOutCommand { get; }
+    public Dictionary<string, Type> Routes { get; private set; } = new Dictionary<string, Type>();
 
- //   private async void RogOutButton_Clicked(object sender, EventArgs e)
-	//{
-	//	bool ans = await DisplayAlert("ログアウト", "ログアウトしてよろしいですか？", "Yes", "No");
+    public AppShell()
+    {
+        InitializeComponent();
+        RegisterRoutes();
+    }
 
-	//	Debug.WriteLine(ans);
-	//}
+    void RegisterRoutes()
+    {
+        Routes.Add(nameof(SchedulerView), typeof(SchedulerView));
+        Routes.Add(nameof(InputDetails), typeof(InputDetails));
+
+        foreach (var item in Routes)
+        {
+            Routing.RegisterRoute(item.Key, item.Value);
+        }
+    }
 }
