@@ -74,6 +74,9 @@
 	  <MauiXaml Update="Views\InputDetails.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\MainPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\SchedulerView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

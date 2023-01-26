@@ -1,42 +1,46 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:WorkScheduler.ViewModels"
+             xmlns:local="clr-namespace:WorkScheduler.Views"
+             xmlns:vm="clr-namespace:WorkScheduler.ViewModels"
+             xmlns:model="clr-namespace:WorkScheduler.Models"
              x:Class="WorkScheduler.Views.HamburgerMenu"
+             Padding="0,40,0,0"
+             IconImageSource="hamburger.png"
              Title="HamburgerMenu">
-
-
     <ContentPage.BindingContext>
-        <local:HamburgerMenuViewModel />
+        <vm:HamburgerMenuViewModel />
     </ContentPage.BindingContext>
-
-    <!--<ContentPage.MenuBarItems>
-        <MenuBarItem Text="予定">
-        </MenuBarItem>
-        <MenuBarItem Text="実績">
-        </MenuBarItem>
-        <MenuBarItem Text="ログアウト">
-            <MenuFlyoutItem Text="ログアウトしますか？" />
-        </MenuBarItem>
-        
-        <MenuBarItem 
-            />
-    </ContentPage.MenuBarItems>-->
-    <!--<ScrollView>
-        <VerticalStackLayout 
-            Spacing="25" 
-            Padding="30,0" 
-            VerticalOptions="Center">
-
-            <Button Text="ログアウト" 
-                Command="{Binding RogOutCommand}" />
-
-        </VerticalStackLayout>
-    </ScrollView>-->
-    
-    <!--<Button
-        Text="ログアウト"
-        Command="{Binding SchedulePage}"
-        />-->
+    <CollectionView x:Name="collectionView"
+                    x:FieldModifier="public"
+                    SelectionMode="Single">
+        <CollectionView.ItemsSource>
+            <x:Array Type="{x:Type model:FlyoutPageItem}">
+                <model:FlyoutPageItem Title="Contacts"
+                                      IconSource="contacts.png"
+                                      TargetType="{x:Type local:SchedulerView}" />
+                <model:FlyoutPageItem Title="Reminders"
+                                      IconSource="reminders.png"
+                                      TargetType="{x:Type local:DataQueryView}" />
+            </x:Array>
+        </CollectionView.ItemsSource>
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <Grid Padding="5,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{Binding IconSource}" />
+                    <Label Grid.Column="1"
+                           Margin="20,0"
+                           Text="{Binding Title}"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center" />
+                </Grid>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
 
 </ContentPage>

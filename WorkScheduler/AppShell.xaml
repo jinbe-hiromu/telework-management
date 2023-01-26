@@ -6,12 +6,12 @@
     xmlns:local="clr-namespace:WorkScheduler"
     xmlns:view="clr-namespace:WorkScheduler.Views"
     xmlns:viewModels="clr-namespace:WorkScheduler.ViewModels"
-    Shell.FlyoutBehavior="Flyout">
+    Shell.FlyoutBehavior="Disabled">
 
-    <!--<ShellContent
+    <ShellContent
         Title="Home"
-        ContentTemplate="{DataTemplate view:HamburgerMenu}"
-        Route="MainPage" />-->
+        ContentTemplate="{DataTemplate view:LoginView}"
+        Route="LoginView" />
 
 
     <!--<TabBar Title="">
@@ -44,22 +44,7 @@
                 Route="MainPage" />
     </FlyoutItem>-->
 
-    <FlyoutItem Title="スケジュール">
-        <ShellContent
-                Title="予定"
-                ContentTemplate="{DataTemplate view:SchedulerView}" />
 
-        <ShellContent
-                Title="実績"
-                ContentTemplate="{DataTemplate view:DataQueryView}"
-                Route="ResultsPage" />
-    </FlyoutItem>
-
-    <FlyoutItem Title="ログアウト">
-        <ShellContent
-                Title="ログアウト"
-                ContentTemplate="{DataTemplate view:HamburgerMenu}" />
-    </FlyoutItem>
 
     <!--<MenuItem Text="Log Out"
               Command="{Binding LogOutCommand}"

@@ -1,4 +1,6 @@
 ﻿
+using WorkScheduler.Views;
+
 namespace WorkScheduler.ViewModels
 {
     public class LoginViewModel : BindableObject
@@ -10,12 +12,9 @@ namespace WorkScheduler.ViewModels
             LoginCommand = new(OnLoginClicked);
         }
 
-        private void OnLoginClicked(object _)
+        private async void OnLoginClicked(object _)
         {
-            var toast = CommunityToolkit.Maui.Alerts.Toast.Make("LoginClicked!!");
-            _ = toast.Show(CancellationToken.None);
+            await Shell.Current.GoToAsync(nameof(MainPage));
         }
-
-
     }
 }
