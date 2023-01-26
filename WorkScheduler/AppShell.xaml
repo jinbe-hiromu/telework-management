@@ -44,24 +44,29 @@
                 Route="MainPage" />
     </FlyoutItem>-->
 
-    <FlyoutItem Title="スケジュール" Route="SchedulMenu">
+    <FlyoutItem Title="スケジュール">
         <ShellContent
                 Title="予定"
                 ContentTemplate="{DataTemplate view:InputDetails}"
-                Shell.BackgroundColor="LightBlue"
-                Route="SchedulPage" />
+                />
 
         <ShellContent
                 Title="実績"
                 ContentTemplate="{DataTemplate view:DataQueryView}"
-                Shell.BackgroundColor="LightBlue"
                 Route="ResultsPage" />
     </FlyoutItem>
 
-    <FlyoutItem Title="ログアウト" Route="LogOutMenu">
+    <FlyoutItem Title="ログアウト">
         <ShellContent
                 Title="ログアウト"
                 ContentTemplate="{DataTemplate view:HamburgerMenu}"
-                Route="LogOutPage" />
+                />
     </FlyoutItem>
+
+    <!--<MenuItem Text="Help"
+              IconImageSource="help.png"
+              Command="{Binding HelpCommand}"
+              />-->
+
+
 </Shell>
