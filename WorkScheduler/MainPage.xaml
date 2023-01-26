@@ -42,6 +42,12 @@
                 Clicked="OnTempClicked"
                 HorizontalOptions="Center" />
 
+            <Button
+                Text="Move To The View Touma Created"
+                SemanticProperties.Hint="Counts the number of times you click"
+                Clicked="OnTempClicked2"
+                HorizontalOptions="Center" />
+
         </VerticalStackLayout>
     </ScrollView>
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WorkScheduler.Views.LoginView"
+             xmlns:vm="clr-namespace:WorkScheduler.ViewModels"
+             Title="LoginView">
+    <ContentPage.BindingContext>
+        <vm:LoginViewModel />
+    </ContentPage.BindingContext>
+    <VerticalStackLayout>
+        <Label Text="Work Scheduler" VerticalOptions="Start" HorizontalOptions="Center" FontSize="30" />
+        <Label Text="ユーザ名" VerticalOptions="Start" HorizontalOptions="Start" />
+        <Entry Text="{Binding UserName}" />
+        <Label Text="パスワード" VerticalOptions="Start" HorizontalOptions="Start" />
+        <Entry Text="{Binding UserName}" IsPassword="True" />
+        <Button Text="ログイン" Command="{Binding LoginCommand}"/>
+    </VerticalStackLayout>
+</ContentPage>
