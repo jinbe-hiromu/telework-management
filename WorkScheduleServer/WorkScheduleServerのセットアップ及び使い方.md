@@ -76,10 +76,8 @@ ex. http://127.0.0.1:5000/api/WorkSchedule/Login
    Content-Type: application/json; charset=utf-8
  }
  Body {
-  "AccountInfo" ; {
      "username" : "<ユーザー名>",
      "password" : "<パスワード>"
-  }
  }
  [Response]
  Body {
@@ -119,13 +117,11 @@ POST時に、AccessTokenをリクエストヘッダーに指定し、URLを呼�
  }
  [Response]
  Body {
-  "WorkScheduleItem" : {　 
-    "Date"        : "2023/1/30",
-    "StartTime"   : "2023/1/30 08:40",
-    "EndTime"     : "2023/1/30 17:40",
+    "Date"        : "2023-01-30",
+    "StartTime"   : "2023-01-30T08:40",
+    "EndTime"     : "2023-01-30T17:40",
     "WorkStyle"   : "出社",　 出張,テレワーク,有休
     "WorkingPlace"   : "阿久比"　 刈谷,自宅,その他
-  }
  }
 ```
 
@@ -147,13 +143,11 @@ GET時に、AccessTokenをリクエストヘッダーに指定し、URLを呼び
    AccessToken: <アクセストークン>
  }
 Body {
-  "WorkScheduleItem" : {　 
-    "Date"        : "2023/1/30",
-    "StartTime"   : "2023/1/30 08:40",
-    "EndTime"     : "2023/1/30 17:40",
+    "Date"        : "2023-01-30",
+    "StartTime"   : "2023-01-30T08:40",
+    "EndTime"     : "2023-01-30T17:40",
     "WorkStyle"   : "出社",　 出張,テレワーク,有休
     "WorkingPlace"   : "阿久比"　 刈谷,自宅,その他
-  }
  }
 ```
 
@@ -174,13 +168,11 @@ Body {
    AccessToken: <アクセストークン>
  }
 Body {
-  "WorkScheduleItem" : {　 WorkScheduleServer.Models.WorkScheduleItem
-    "Date"        : "2023/1/30",
-    "StartTime"   : "2023/1/30 08:40",
-    "EndTime"     : "2023/1/30 17:40",
+    "Date"        : "2023-01-30",
+    "StartTime"   : "2023-01-30T08:40",
+    "EndTime"     : "2023-01-30T17:40",
     "WorkStyle"   : "出社",　 出張,テレワーク,有休
     "WorkingPlace"   : "阿久比"　 刈谷,自宅,その他
-  }
  }
 ```
 
