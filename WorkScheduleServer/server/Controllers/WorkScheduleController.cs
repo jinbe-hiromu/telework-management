@@ -58,19 +58,19 @@ namespace WorkScheduleServer.Controllers
         //      "AccessToken" : "<アクセストークン>"
         //  }
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] AccountInfo account)
+        public async Task<IActionResult> Login([FromBody] AccountInfo accountInfo)
         {
             // TODO: [FromBody]のaccountがnullになる問題解決
-            account.UserName = "Fukaya";
-            account.Password= "Fukaya@10T";  
+            accountInfo.UserName = "Fukaya";
+            accountInfo.Password= "Fukaya@10T";  
 
-            if (!string.IsNullOrEmpty(account.UserName) && !string.IsNullOrEmpty(account.Password))
+            if (!string.IsNullOrEmpty(accountInfo.UserName) && !string.IsNullOrEmpty(accountInfo.Password))
             {
-                var result = await signInManager.PasswordSignInAsync(account.UserName, account.Password, false, false);
+                var result = await signInManager.PasswordSignInAsync(accountInfo.UserName, accountInfo.Password, false, false);
                 if (result.Succeeded)
                 {
                     // Return access_token
-                    var ResponseBody = new { AccessToken = AccessTokenManager.CreateAccessToken(account.UserName) };
+                    var ResponseBody = new { AccessToken = AccessTokenManager.CreateAccessToken(accountInfo.UserName) };
                     return Ok(ResponseBody);
                 }
             }
@@ -176,7 +176,7 @@ namespace WorkScheduleServer.Controllers
         public async Task<IActionResult> Post(
             [FromHeader] string accessToken,
             int year, int month, int day,
-            [FromBody] WorkScheduleItem item)
+            [FromBody] WorkScheduleItem workScheduleItem)
         {
             // TODO: [FromBody]のitemがnullになる問題解決
 
@@ -197,10 +197,10 @@ namespace WorkScheduleServer.Controllers
                 {
                     // Already exists
                     // workSchedule.Id = workSchedule.Id;
-                    workSchedule.StartTime = item.StartTime;
-                    workSchedule.EndTime = item.EndTime;
-                    workSchedule.WorkStyle = item.WorkStyle;
-                    workSchedule.WorkingPlace = item.WorkingPlace;
+                    workSchedule.StartTime = workScheduleItem.StartTime;
+                    workSchedule.EndTime = workScheduleItem.EndTime;
+                    workSchedule.WorkStyle = workScheduleItem.WorkStyle;
+                    workSchedule.WorkingPlace = workScheduleItem.WorkingPlace;
 
                     // Update
                     workScheduleDbContext.WorkSchedules.Update(workSchedule);
@@ -213,10 +213,10 @@ namespace WorkScheduleServer.Controllers
                     {
                         Id = id + 1,
                         Date = date,
-                        StartTime = item.StartTime,
-                        EndTime = item.EndTime,
-                        WorkStyle = item.WorkStyle,
-                        WorkingPlace = item.WorkingPlace
+                        StartTime = workScheduleItem.StartTime,
+                        EndTime = workScheduleItem.EndTime,
+                        WorkStyle = workScheduleItem.WorkStyle,
+                        WorkingPlace = workScheduleItem.WorkingPlace
                     };
 
                     // Add
@@ -250,11 +250,11 @@ namespace WorkScheduleServer.Controllers
         // }
         public async Task<IActionResult> Put([FromHeader] string accessToken,
             int year, int month, int day,
-            [FromBody] WorkScheduleItem item)
+            [FromBody] WorkScheduleItem workScheduleItem)
         {
             // TODO: [FromBody]のitemがnullになる問題解決
 
-            return await Post(accessToken, year, month, day, item);
+            return await Post(accessToken, year, month, day, workScheduleItem);
         }
 
         // DELETE <host>/api/WorkSchedule/<year>/<month>/<day>
