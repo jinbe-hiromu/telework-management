@@ -24,6 +24,8 @@ using WorkScheduleServer.Data;
 using WorkScheduleServer.Models;
 using WorkScheduleServer.Authentication;
 using Radzen;
+using System.IO;
+
 namespace WorkScheduleServer
 {
     public partial class Startup
@@ -60,7 +62,9 @@ namespace WorkScheduleServer
             services.AddAuthorization();
             services.AddDbContext<ApplicationIdentityDbContext>(options =>
             {
-                options.UseSqlite(Configuration.GetConnectionString("WorkScheduleDBConnection"));
+                options.UseSqlite(
+                    Environment.ExpandEnvironmentVariables(
+                        Configuration.GetConnectionString("WorkScheduleDBConnection")));
             }, ServiceLifetime.Transient);            
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -73,7 +77,9 @@ namespace WorkScheduleServer
 
             services.AddDbContext<WorkScheduleServer.Data.WorkScheduleDbContext>(options =>
             {
-              options.UseSqlite(Configuration.GetConnectionString("WorkScheduleDBConnection"));
+              options.UseSqlite(
+                  Environment.ExpandEnvironmentVariables(
+                      Configuration.GetConnectionString("WorkScheduleDBConnection")));
             });
 
             services.AddControllersWithViews();

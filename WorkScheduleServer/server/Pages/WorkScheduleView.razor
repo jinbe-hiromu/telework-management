@@ -1,6 +1,7 @@
-﻿@page "/work-schedules"
+﻿@page "/"
+@page "/work-schedule-view"
 @layout MainLayout
-@inherits WorkScheduleServer.Pages.WorkSchedulesComponent
+@inherits WorkScheduleServer.Pages.WorkScheduleViewComponent
 
 @using Radzen
 @using Radzen.Blazor
@@ -9,10 +10,10 @@
 @using WorkScheduleServer.Models
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
-<PageTitle>Work Schedules</PageTitle>
+<PageTitle>Work Schedule View</PageTitle>
 <RadzenContent Container="main">
   <ChildContent>
-    <RadzenHeading Size="H1"  Text="Work Schedules (ALL)">
+    <RadzenHeading Size="H1"  Text="Work Schedule View">
     </RadzenHeading>
     <div class="row">
       <div class="col-md-12">

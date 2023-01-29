@@ -8,19 +8,37 @@ namespace WorkScheduleServer.Models.WorkScheduleDb
   public partial class WorkSchedule
   {
     [Key]
-    public int? Id
+    public int Id
     {
       get;
       set;
     }
-    public int? User
+    public DateTime? Date
     {
       get;
       set;
     }
-
-    [Column("Action")]
-    public int? Action1
+    public DateTime? StartTime
+    {
+      get;
+      set;
+    }
+    public DateTime? EndTime
+    {
+      get;
+      set;
+    }
+    public string WorkStyle
+    {
+      get;
+      set;
+    }
+    public string WorkingPlace
+    {
+      get;
+      set;
+    }
+    public string User
     {
       get;
       set;

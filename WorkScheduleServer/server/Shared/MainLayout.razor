@@ -54,11 +54,9 @@
       <ChildContent>
         <RadzenPanelMenu style="height: 100%">
           <ChildContent>
-            <RadzenPanelMenuItem Text="Acounts" Path="acounts" Visible="@Security.IsInRole(new string[]{"Authenticated"})">
+            <RadzenPanelMenuItem Icon="schedule" Path="work-schedule-view" Text="Work Schedule View" Visible="@Security.IsInRole(new string[]{"Everybody"})">
             </RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Action Items" Path="action-items" Visible="@Security.IsInRole(new string[]{"Authenticated"})">
-            </RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Work Schedules" Path="work-schedules" Visible="@Security.IsInRole(new string[]{"Authenticated"})">
+            <RadzenPanelMenuItem Icon="table_view" Path="work-schedules" Text="Work Schedules" Visible="@Security.IsInRole(new string[]{"Everybody"})">
             </RadzenPanelMenuItem>
           </ChildContent>
         </RadzenPanelMenu>

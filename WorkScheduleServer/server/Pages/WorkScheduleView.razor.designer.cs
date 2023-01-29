@@ -15,7 +15,7 @@ using WorkScheduleServer.Models;
 
 namespace WorkScheduleServer.Pages
 {
-    public partial class ActionItemsComponent : ComponentBase
+    public partial class WorkScheduleViewComponent : ComponentBase
     {
         [Parameter(CaptureUnmatchedValues = true)]
         public IReadOnlyDictionary<string, dynamic> Attributes { get; set; }
@@ -55,21 +55,21 @@ namespace WorkScheduleServer.Pages
 
         [Inject]
         protected WorkScheduleDbService WorkScheduleDb { get; set; }
-        protected RadzenDataGrid<WorkScheduleServer.Models.WorkScheduleDb.ActionItem> grid0;
+        protected RadzenDataGrid<WorkScheduleServer.Models.WorkScheduleDb.WorkSchedule> grid0;
 
-        IEnumerable<WorkScheduleServer.Models.WorkScheduleDb.ActionItem> _getActionItemsResult;
-        protected IEnumerable<WorkScheduleServer.Models.WorkScheduleDb.ActionItem> getActionItemsResult
+        IEnumerable<WorkScheduleServer.Models.WorkScheduleDb.WorkSchedule> _getWorkSchedulesResult;
+        protected IEnumerable<WorkScheduleServer.Models.WorkScheduleDb.WorkSchedule> getWorkSchedulesResult
         {
             get
             {
-                return _getActionItemsResult;
+                return _getWorkSchedulesResult;
             }
             set
             {
-                if (!object.Equals(_getActionItemsResult, value))
+                if (!object.Equals(_getWorkSchedulesResult, value))
                 {
-                    var args = new PropertyChangedEventArgs(){ Name = "getActionItemsResult", NewValue = value, OldValue = _getActionItemsResult };
-                    _getActionItemsResult = value;
+                    var args = new PropertyChangedEventArgs(){ Name = "getWorkSchedulesResult", NewValue = value, OldValue = _getWorkSchedulesResult };
+                    _getWorkSchedulesResult = value;
                     OnPropertyChanged(args);
                     Reload();
                 }
@@ -90,13 +90,13 @@ namespace WorkScheduleServer.Pages
         }
         protected async System.Threading.Tasks.Task Load()
         {
-            var workScheduleDbGetActionItemsResult = await WorkScheduleDb.GetActionItems();
-            getActionItemsResult = workScheduleDbGetActionItemsResult;
+            var workScheduleDbGetWorkSchedulesResult = await WorkScheduleDb.GetWorkSchedules(new Query() { Filter = $@"i => i.User == @0", FilterParameters = new object[] { Security.User.Email }, OrderBy = $"Date asc" });
+            getWorkSchedulesResult = workScheduleDbGetWorkSchedulesResult;
         }
 
         protected async System.Threading.Tasks.Task Button0Click(MouseEventArgs args)
         {
-            var dialogResult = await DialogService.OpenAsync<AddActionItem>("Add Action Item", null);
+            var dialogResult = await DialogService.OpenAsync<AddWorkSchedule>("Add Work Schedule", null);
             await grid0.Reload();
 
             await InvokeAsync(() => { StateHasChanged(); });
@@ -106,20 +106,20 @@ namespace WorkScheduleServer.Pages
         {
             if (args?.Value == "csv")
             {
-                await WorkScheduleDb.ExportActionItemsToCSV(new Query() { Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}", OrderBy = $"{grid0.Query.OrderBy}", Expand = "", Select = "Id,From,To,EventName,Notes,BackgroudColor" }, $"Action Items");
+                await WorkScheduleDb.ExportWorkSchedulesToCSV(new Query() { Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}", OrderBy = $"{grid0.Query.OrderBy}", Expand = "", Select = "Id,Date,StartTime,EndTime,WorkStyle,WorkingPlace,User" }, $"Work Schedules");
 
             }
 
             if (args == null || args.Value == "xlsx")
             {
-                await WorkScheduleDb.ExportActionItemsToExcel(new Query() { Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}", OrderBy = $"{grid0.Query.OrderBy}", Expand = "", Select = "Id,From,To,EventName,Notes,BackgroudColor" }, $"Action Items");
+                await WorkScheduleDb.ExportWorkSchedulesToExcel(new Query() { Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}", OrderBy = $"{grid0.Query.OrderBy}", Expand = "", Select = "Id,Date,StartTime,EndTime,WorkStyle,WorkingPlace,User" }, $"Work Schedules");
 
             }
         }
 
-        protected async System.Threading.Tasks.Task Grid0RowSelect(WorkScheduleServer.Models.WorkScheduleDb.ActionItem args)
+        protected async System.Threading.Tasks.Task Grid0RowSelect(WorkScheduleServer.Models.WorkScheduleDb.WorkSchedule args)
         {
-            var dialogResult = await DialogService.OpenAsync<EditActionItem>("Edit Action Item", new Dictionary<string, object>() { {"Id", args.Id} });
+            var dialogResult = await DialogService.OpenAsync<EditWorkSchedule>("Edit Work Schedule", new Dictionary<string, object>() { {"Id", args.Id} });
             await InvokeAsync(() => { StateHasChanged(); });
         }
 
@@ -129,16 +129,16 @@ namespace WorkScheduleServer.Pages
             {
                 if (await DialogService.Confirm("Are you sure you want to delete this record?") == true)
                 {
-                    var workScheduleDbDeleteActionItemResult = await WorkScheduleDb.DeleteActionItem(data.Id);
-                    if (workScheduleDbDeleteActionItemResult != null)
+                    var workScheduleDbDeleteWorkScheduleResult = await WorkScheduleDb.DeleteWorkSchedule(data.Id);
+                    if (workScheduleDbDeleteWorkScheduleResult != null)
                     {
                         await grid0.Reload();
                     }
                 }
             }
-            catch (System.Exception workScheduleDbDeleteActionItemException)
+            catch (System.Exception workScheduleDbDeleteWorkScheduleException)
             {
-                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error,Summary = $"Error",Detail = $"Unable to delete ActionItem" });
+                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error,Summary = $"Error",Detail = $"Unable to delete WorkSchedule" });
             }
         }
     }

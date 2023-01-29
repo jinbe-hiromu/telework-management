@@ -14,41 +14,83 @@
   <ChildContent>
     <div class="row">
       <div class="col-md-12">
-        <RadzenTemplateForm Data="@workschedule" Visible="@(workschedule != null)" TItem="WorkScheduleServer.Models.WorkScheduleDb.WorkSchedule" Submit="@Form0Submit">
+        <RadzenTemplateForm Data="@workschedule" TItem="WorkScheduleServer.Models.WorkScheduleDb.WorkSchedule" Visible="@(workschedule != null)" Submit="@Form0Submit">
           <ChildContent>
             <div style="margin-bottom: 1rem" class="row">
               <div class="col-md-3">
-                <RadzenLabel Text="Id" Component="Id" style="width: 100%">
+                <RadzenLabel Component="Id" style="width: 100%" Text="Id">
                 </RadzenLabel>
               </div>
               <div class="col-md-9">
-                <RadzenNumeric style="width: 100%" @bind-Value="@(workschedule.Id)" Name="Id">
+                <RadzenNumeric style="display: block; width: 100%" @bind-Value="@(workschedule.Id)" Name="Id">
                 </RadzenNumeric>
+                <RadzenRequiredValidator Component="Id" style="position: absolute" Text="Id is required">
+                </RadzenRequiredValidator>
               </div>
             </div>
             <div style="margin-bottom: 1rem" class="row">
               <div class="col-md-3">
-                <RadzenLabel Text="User" Component="User" style="width: 100%">
+                <RadzenLabel Component="Date" style="width: 100%" Text="Date">
                 </RadzenLabel>
               </div>
               <div class="col-md-9">
-                <RadzenNumeric style="width: 100%" @bind-Value="@(workschedule.User)" Name="User">
-                </RadzenNumeric>
+                <RadzenDatePicker DateFormat="yyyy/MM/dd" style="width: 100%" @bind-Value="@(workschedule.Date)" Name="Date">
+                </RadzenDatePicker>
               </div>
             </div>
             <div style="margin-bottom: 1rem" class="row">
               <div class="col-md-3">
-                <RadzenLabel Text="Action" Component="Action1" style="width: 100%">
+                <RadzenLabel Component="StartTime" style="width: 100%" Text="Start Time">
                 </RadzenLabel>
               </div>
               <div class="col-md-9">
-                <RadzenNumeric style="width: 100%" @bind-Value="@(workschedule.Action1)" Name="Action1">
-                </RadzenNumeric>
+                <RadzenDatePicker DateFormat="yyyy/MM/dd HH:mm" style="width: 100%" @bind-Value="@(workschedule.StartTime)" Name="StartTime">
+                </RadzenDatePicker>
+              </div>
+            </div>
+            <div style="margin-bottom: 1rem" class="row">
+              <div class="col-md-3">
+                <RadzenLabel Component="EndTime" style="width: 100%" Text="End Time">
+                </RadzenLabel>
+              </div>
+              <div class="col-md-9">
+                <RadzenDatePicker DateFormat="yyyy/MM/dd HH:mm" style="width: 100%" @bind-Value="@(workschedule.EndTime)" Name="EndTime">
+                </RadzenDatePicker>
+              </div>
+            </div>
+            <div style="margin-bottom: 1rem" class="row">
+              <div class="col-md-3">
+                <RadzenLabel Component="WorkStyle" style="width: 100%" Text="Work Style">
+                </RadzenLabel>
+              </div>
+              <div class="col-md-9">
+                <RadzenTextBox style="width: 100%" @bind-Value="@(workschedule.WorkStyle)" Name="WorkStyle">
+                </RadzenTextBox>
+              </div>
+            </div>
+            <div style="margin-bottom: 1rem" class="row">
+              <div class="col-md-3">
+                <RadzenLabel Component="WorkingPlace" style="width: 100%" Text="Working Place">
+                </RadzenLabel>
+              </div>
+              <div class="col-md-9">
+                <RadzenTextBox style="width: 100%" @bind-Value="@(workschedule.WorkingPlace)" Name="WorkingPlace">
+                </RadzenTextBox>
+              </div>
+            </div>
+            <div style="margin-bottom: 1rem" class="row">
+              <div class="col-md-3">
+                <RadzenLabel Component="User" style="width: 100%" Text="User">
+                </RadzenLabel>
+              </div>
+              <div class="col-md-9">
+                <RadzenTextBox style="width: 100%" @bind-Value="@(workschedule.User)" Name="User">
+                </RadzenTextBox>
               </div>
             </div>
             <div class="row">
               <div class="col offset-sm-3">
-                <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary">
+                <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Save">
                 </RadzenButton>
                 <RadzenButton ButtonStyle="ButtonStyle.Light" style="margin-left: 1rem" Text="Cancel" Click="@Button2Click">
                 </RadzenButton>

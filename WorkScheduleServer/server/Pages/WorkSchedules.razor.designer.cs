@@ -106,13 +106,13 @@ namespace WorkScheduleServer.Pages
         {
             if (args?.Value == "csv")
             {
-                await WorkScheduleDb.ExportWorkSchedulesToCSV(new Query() { Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}", OrderBy = $"{grid0.Query.OrderBy}", Expand = "", Select = "Id,User,Action1" }, $"Work Schedules");
+                await WorkScheduleDb.ExportWorkSchedulesToCSV(new Query() { Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}", OrderBy = $"{grid0.Query.OrderBy}", Expand = "", Select = "Id,Date,StartTime,EndTime,WorkStyle,WorkingPlace,User" }, $"Work Schedules");
 
             }
 
             if (args == null || args.Value == "xlsx")
             {
-                await WorkScheduleDb.ExportWorkSchedulesToExcel(new Query() { Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}", OrderBy = $"{grid0.Query.OrderBy}", Expand = "", Select = "Id,User,Action1" }, $"Work Schedules");
+                await WorkScheduleDb.ExportWorkSchedulesToExcel(new Query() { Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}", OrderBy = $"{grid0.Query.OrderBy}", Expand = "", Select = "Id,Date,StartTime,EndTime,WorkStyle,WorkingPlace,User" }, $"Work Schedules");
 
             }
         }

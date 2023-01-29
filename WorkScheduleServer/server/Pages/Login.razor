@@ -17,7 +17,7 @@
       <div class="col-md-12">
         <RadzenTemplateForm Action="@($"account/login?redirectUrl={redirectUrl}")" Data="@("login")" Method="post">
           <ChildContent>
-            <RadzenLogin AllowResetPassword="false" Register="@Login0Register">
+            <RadzenLogin AllowRegister="false" AllowResetPassword="false" Register="@Login0Register">
             </RadzenLogin>
           </ChildContent>
         </RadzenTemplateForm>

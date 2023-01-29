@@ -1,168 +1,331 @@
 {
+  "access": [
+    "Authenticated"
+  ],
   "components": [
     {
-      "type": "content",
-      "container": "main",
       "components": [
         {
-          "type": "row",
           "components": [
             {
-              "type": "col",
               "class": "col-md-12",
               "components": [
                 {
-                  "type": "template-form",
-                  "name": "form0",
                   "components": [
                     {
-                      "type": "row",
-                      "style": {
-                        "marginBottom": "1rem"
-                      },
                       "components": [
                         {
-                          "type": "col",
                           "class": "col-md-3",
                           "components": [
                             {
-                              "type": "label",
-                              "text": "Id",
                               "component": "Id",
                               "name": "IdLabel",
                               "style": {
                                 "width": "100%"
-                              }
+                              },
+                              "text": "Id",
+                              "type": "label"
                             }
-                          ]
+                          ],
+                          "type": "col"
                         },
                         {
-                          "type": "col",
                           "class": "col-md-9",
                           "components": [
                             {
-                              "valueType": "int?",
-                              "type": "numeric",
                               "name": "Id",
                               "style": {
+                                "display": "block",
                                 "width": "100%"
                               },
-                              "value": "${workschedule.Id}"
+                              "type": "numeric",
+                              "value": "${workschedule.Id}",
+                              "valueType": "int"
+                            },
+                            {
+                              "component": "Id",
+                              "name": "IdRequiredValidator",
+                              "style": {
+                                "position": "absolute"
+                              },
+                              "text": "Id is required",
+                              "type": "required-validator"
                             }
-                          ]
+                          ],
+                          "type": "col"
                         }
-                      ]
-                    },
-                    {
-                      "type": "row",
+                      ],
                       "style": {
                         "marginBottom": "1rem"
                       },
+                      "type": "row"
+                    },
+                    {
                       "components": [
                         {
-                          "type": "col",
                           "class": "col-md-3",
                           "components": [
                             {
-                              "type": "label",
-                              "text": "User",
+                              "component": "Date",
+                              "name": "DateLabel",
+                              "style": {
+                                "width": "100%"
+                              },
+                              "text": "Date",
+                              "type": "label"
+                            }
+                          ],
+                          "type": "col"
+                        },
+                        {
+                          "class": "col-md-9",
+                          "components": [
+                            {
+                              "dateFormat": "yyyy/MM/dd",
+                              "name": "Date",
+                              "style": {
+                                "width": "100%"
+                              },
+                              "type": "datepicker",
+                              "value": "${workschedule.Date}",
+                              "valueType": "DateTime?"
+                            }
+                          ],
+                          "type": "col"
+                        }
+                      ],
+                      "style": {
+                        "marginBottom": "1rem"
+                      },
+                      "type": "row"
+                    },
+                    {
+                      "components": [
+                        {
+                          "class": "col-md-3",
+                          "components": [
+                            {
+                              "component": "StartTime",
+                              "name": "StartTimeLabel",
+                              "style": {
+                                "width": "100%"
+                              },
+                              "text": "Start Time",
+                              "type": "label"
+                            }
+                          ],
+                          "type": "col"
+                        },
+                        {
+                          "class": "col-md-9",
+                          "components": [
+                            {
+                              "dateFormat": "yyyy/MM/dd HH:mm",
+                              "name": "StartTime",
+                              "style": {
+                                "width": "100%"
+                              },
+                              "type": "datepicker",
+                              "value": "${workschedule.StartTime}",
+                              "valueType": "DateTime?"
+                            }
+                          ],
+                          "type": "col"
+                        }
+                      ],
+                      "style": {
+                        "marginBottom": "1rem"
+                      },
+                      "type": "row"
+                    },
+                    {
+                      "components": [
+                        {
+                          "class": "col-md-3",
+                          "components": [
+                            {
+                              "component": "EndTime",
+                              "name": "EndTimeLabel",
+                              "style": {
+                                "width": "100%"
+                              },
+                              "text": "End Time",
+                              "type": "label"
+                            }
+                          ],
+                          "type": "col"
+                        },
+                        {
+                          "class": "col-md-9",
+                          "components": [
+                            {
+                              "dateFormat": "yyyy/MM/dd HH:mm",
+                              "name": "EndTime",
+                              "style": {
+                                "width": "100%"
+                              },
+                              "type": "datepicker",
+                              "value": "${workschedule.EndTime}",
+                              "valueType": "DateTime?"
+                            }
+                          ],
+                          "type": "col"
+                        }
+                      ],
+                      "style": {
+                        "marginBottom": "1rem"
+                      },
+                      "type": "row"
+                    },
+                    {
+                      "components": [
+                        {
+                          "class": "col-md-3",
+                          "components": [
+                            {
+                              "component": "WorkStyle",
+                              "name": "WorkStyleLabel",
+                              "style": {
+                                "width": "100%"
+                              },
+                              "text": "Work Style",
+                              "type": "label"
+                            }
+                          ],
+                          "type": "col"
+                        },
+                        {
+                          "class": "col-md-9",
+                          "components": [
+                            {
+                              "name": "WorkStyle",
+                              "style": {
+                                "width": "100%"
+                              },
+                              "type": "textbox",
+                              "value": "${workschedule.WorkStyle}",
+                              "valueType": "string"
+                            }
+                          ],
+                          "type": "col"
+                        }
+                      ],
+                      "style": {
+                        "marginBottom": "1rem"
+                      },
+                      "type": "row"
+                    },
+                    {
+                      "components": [
+                        {
+                          "class": "col-md-3",
+                          "components": [
+                            {
+                              "component": "WorkingPlace",
+                              "name": "WorkingPlaceLabel",
+                              "style": {
+                                "width": "100%"
+                              },
+                              "text": "Working Place",
+                              "type": "label"
+                            }
+                          ],
+                          "type": "col"
+                        },
+                        {
+                          "class": "col-md-9",
+                          "components": [
+                            {
+                              "name": "WorkingPlace",
+                              "style": {
+                                "width": "100%"
+                              },
+                              "type": "textbox",
+                              "value": "${workschedule.WorkingPlace}",
+                              "valueType": "string"
+                            }
+                          ],
+                          "type": "col"
+                        }
+                      ],
+                      "style": {
+                        "marginBottom": "1rem"
+                      },
+                      "type": "row"
+                    },
+                    {
+                      "components": [
+                        {
+                          "class": "col-md-3",
+                          "components": [
+                            {
                               "component": "User",
                               "name": "UserLabel",
                               "style": {
                                 "width": "100%"
-                              }
+                              },
+                              "text": "User",
+                              "type": "label"
                             }
-                          ]
+                          ],
+                          "type": "col"
                         },
                         {
-                          "type": "col",
                           "class": "col-md-9",
                           "components": [
                             {
-                              "valueType": "int?",
-                              "type": "numeric",
                               "name": "User",
                               "style": {
                                 "width": "100%"
                               },
-                              "value": "${workschedule.User}"
+                              "type": "textbox",
+                              "value": "${workschedule.User}",
+                              "valueType": "string"
                             }
-                          ]
+                          ],
+                          "type": "col"
                         }
-                      ]
-                    },
-                    {
-                      "type": "row",
+                      ],
                       "style": {
                         "marginBottom": "1rem"
                       },
-                      "components": [
-                        {
-                          "type": "col",
-                          "class": "col-md-3",
-                          "components": [
-                            {
-                              "type": "label",
-                              "text": "Action",
-                              "component": "Action1",
-                              "name": "Action1Label",
-                              "style": {
-                                "width": "100%"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "col",
-                          "class": "col-md-9",
-                          "components": [
-                            {
-                              "valueType": "int?",
-                              "type": "numeric",
-                              "name": "Action1",
-                              "style": {
-                                "width": "100%"
-                              },
-                              "value": "${workschedule.Action1}"
-                            }
-                          ]
-                        }
-                      ]
+                      "type": "row"
                     },
                     {
-                      "type": "row",
                       "components": [
                         {
-                          "type": "col",
                           "class": "col offset-sm-3",
                           "components": [
                             {
-                              "type": "button",
+                              "buttonStyle": "primary",
                               "buttonType": "submit",
                               "icon": "save",
                               "text": "Save",
-                              "buttonStyle": "primary"
+                              "type": "button"
                             },
                             {
-                              "type": "button",
                               "buttonStyle": "light",
-                              "style": {
-                                "marginLeft": "1rem"
-                              },
-                              "text": "Cancel",
                               "events": {
                                 "click": [
                                   {
                                     "type": "close-popup"
                                   }
                                 ]
-                              }
+                              },
+                              "style": {
+                                "marginLeft": "1rem"
+                              },
+                              "text": "Cancel",
+                              "type": "button"
                             }
-                          ]
+                          ],
+                          "type": "col"
                         }
-                      ]
+                      ],
+                      "type": "row"
                     }
                   ],
+                  "data": "${workschedule}",
                   "events": {
                     "submit": [
                       {
@@ -183,23 +346,28 @@
                         ],
                         "then": [
                           {
-                            "type": "close-popup",
-                            "result": "${workschedule}"
+                            "result": "${workschedule}",
+                            "type": "close-popup"
                           }
                         ],
                         "type": "invoke"
                       }
                     ]
                   },
-                  "data": "${workschedule}",
-                  "visible": "${workschedule != null}",
-                  "itemType": "WorkScheduleServer.Models.WorkScheduleDb.WorkSchedule"
+                  "itemType": "WorkScheduleServer.Models.WorkScheduleDb.WorkSchedule",
+                  "name": "form0",
+                  "type": "template-form",
+                  "visible": "${workschedule != null}"
                 }
-              ]
+              ],
+              "type": "col"
             }
-          ]
+          ],
+          "type": "row"
         }
-      ]
+      ],
+      "container": "main",
+      "type": "content"
     }
   ],
   "events": {
@@ -212,9 +380,6 @@
       }
     ]
   },
-  "name": "Add Work Schedule",
   "layout": "Main",
-  "access": [
-    "Authenticated"
-  ]
+  "name": "Add Work Schedule"
 }

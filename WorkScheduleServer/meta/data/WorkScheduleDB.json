@@ -5,252 +5,43 @@
     "x-connector": "sqlite"
   },
   "definitions": {
-    "Acount": {
-      "x-table": "dbo.Acount",
-      "resource": "Acounts",
-      "required": [
-        "Id",
-        "Name",
-        "Password"
-      ],
-      "properties": {
-        "Id": {
-          "x-key": true,
-          "x-nullable": false,
-          "type": "string"
-        },
-        "Name": {
-          "x-nullable": false,
-          "type": "string"
-        },
-        "Password": {
-          "x-nullable": false,
-          "type": "string"
-        },
-        "Notes": {
-          "type": "string"
-        }
-      }
-    },
-    "ActionItem": {
-      "x-table": "dbo.ActionItem",
-      "resource": "ActionItems",
-      "required": [
-        "From",
-        "To"
-      ],
-      "properties": {
-        "Id": {
-          "x-key": true,
-          "x-default-sql": "'0'",
-          "x-nullable": false,
-          "type": "integer"
-        },
-        "From": {
-          "x-nullable": false,
-          "type": "string",
-          "format": "date-time"
-        },
-        "To": {
-          "x-nullable": false,
-          "type": "string",
-          "format": "date-time"
-        },
-        "EventName": {
-          "x-default-sql": "''",
-          "x-nullable": false,
-          "type": "string"
-        },
-        "Notes": {
-          "type": "string"
-        },
-        "BackgroudColor": {
-          "type": "string"
-        }
-      }
-    },
     "WorkSchedule": {
       "x-table": "dbo.WorkSchedule",
       "resource": "WorkSchedules",
-      "required": [],
+      "required": [
+        "Id"
+      ],
       "properties": {
         "Id": {
           "x-key": true,
+          "x-nullable": false,
           "type": "integer"
+        },
+        "Date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "StartTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "EndTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "WorkStyle": {
+          "type": "string"
+        },
+        "WorkingPlace": {
+          "type": "string"
         },
         "User": {
-          "type": "integer"
-        },
-        "Action1": {
-          "x-original-name": "Action",
-          "type": "integer"
+          "type": "string"
         }
       }
     }
   },
   "paths": {
-    "/Acounts": {
-      "get": {
-        "operationId": "getAcounts",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "$filter",
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "$orderby",
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "$expand",
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "$top",
-            "type": "integer"
-          },
-          {
-            "in": "query",
-            "name": "$skip",
-            "type": "integer"
-          },
-          {
-            "in": "query",
-            "name": "$format",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "schema": {
-              "properties": {
-                "value": {
-                  "items": {
-                    "$ref": "#/definitions/Acount"
-                  },
-                  "type": "array"
-                }
-              },
-              "type": "object"
-            }
-          },
-          "default": {
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      },
-      "post": {
-        "operationId": "createAcount",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "Acount",
-            "schema": {
-              "$ref": "#/definitions/Acount"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "schema": {
-              "$ref": "#/definitions/Acount"
-            }
-          },
-          "default": {
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/ActionItems": {
-      "get": {
-        "operationId": "getActionItems",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "$filter",
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "$orderby",
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "$expand",
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "$top",
-            "type": "integer"
-          },
-          {
-            "in": "query",
-            "name": "$skip",
-            "type": "integer"
-          },
-          {
-            "in": "query",
-            "name": "$format",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "schema": {
-              "properties": {
-                "value": {
-                  "items": {
-                    "$ref": "#/definitions/ActionItem"
-                  },
-                  "type": "array"
-                }
-              },
-              "type": "object"
-            }
-          },
-          "default": {
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      },
-      "post": {
-        "operationId": "createActionItem",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "ActionItem",
-            "schema": {
-              "$ref": "#/definitions/ActionItem"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "schema": {
-              "$ref": "#/definitions/ActionItem"
-            }
-          },
-          "default": {
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
     "/WorkSchedules": {
       "get": {
         "operationId": "getWorkSchedules",
@@ -324,180 +115,6 @@
               "$ref": "#/definitions/WorkSchedule"
             }
           },
-          "default": {
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/Acounts('{Id}')": {
-      "delete": {
-        "operationId": "deleteAcount",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "Id",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "204": {},
-          "default": {
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      },
-      "get": {
-        "operationId": "getAcountById",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "Id",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "schema": {
-              "$ref": "#/definitions/Acount"
-            }
-          },
-          "default": {
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      },
-      "patch": {
-        "operationId": "updateAcount",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "Id",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "Acount",
-            "schema": {
-              "$ref": "#/definitions/Acount"
-            }
-          }
-        ],
-        "responses": {
-          "204": {},
-          "default": {
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      },
-      "cancel": {
-        "operationId": "cancelAcountChanges",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "Acount",
-            "schema": {
-              "$ref": "#/definitions/Acount"
-            }
-          }
-        ],
-        "responses": {
-          "204": {},
-          "default": {
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/ActionItems({Id})": {
-      "delete": {
-        "operationId": "deleteActionItem",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "Id",
-            "type": "integer"
-          }
-        ],
-        "responses": {
-          "204": {},
-          "default": {
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      },
-      "get": {
-        "operationId": "getActionItemById",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "Id",
-            "type": "integer"
-          }
-        ],
-        "responses": {
-          "200": {
-            "schema": {
-              "$ref": "#/definitions/ActionItem"
-            }
-          },
-          "default": {
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      },
-      "patch": {
-        "operationId": "updateActionItem",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "Id",
-            "type": "integer"
-          },
-          {
-            "in": "body",
-            "name": "ActionItem",
-            "schema": {
-              "$ref": "#/definitions/ActionItem"
-            }
-          }
-        ],
-        "responses": {
-          "204": {},
-          "default": {
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      },
-      "cancel": {
-        "operationId": "cancelActionItemChanges",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "ActionItem",
-            "schema": {
-              "$ref": "#/definitions/ActionItem"
-            }
-          }
-        ],
-        "responses": {
-          "204": {},
           "default": {
             "schema": {
               "$ref": "#/definitions/Error"

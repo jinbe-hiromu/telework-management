@@ -1,7 +1,6 @@
 {
   "components": [
     {
-      "type": "layout",
       "components": [
         {
           "components": [
@@ -12,8 +11,6 @@
                   "class": "col-6 d-flex align-items-center",
                   "components": [
                     {
-                      "name": "sidebar-toggle0",
-                      "type": "sidebar-toggle",
                       "events": {
                         "click": [
                           {
@@ -25,7 +22,9 @@
                             "type": "execute"
                           }
                         ]
-                      }
+                      },
+                      "name": "sidebar-toggle0",
+                      "type": "sidebar-toggle"
                     },
                     {
                       "name": "label0",
@@ -38,21 +37,21 @@
                 },
                 {
                   "class": "col-6 text-right",
-                  "name": "rightCol",
-                  "type": "col",
                   "components": [
                     {
-                      "type": "profilemenu",
                       "name": "profilemenu0",
-                      "visible": "${Security.IsAuthenticated()}",
                       "template": [
                         {
                           "email": "${Security.User?.Name}",
                           "type": "gravatar"
                         }
-                      ]
+                      ],
+                      "type": "profilemenu",
+                      "visible": "${Security.IsAuthenticated()}"
                     }
-                  ]
+                  ],
+                  "name": "rightCol",
+                  "type": "col"
                 }
               ],
               "name": "headerRow",
@@ -75,6 +74,20 @@
         {
           "components": [
             {
+              "items": [
+                {
+                  "icon": "schedule",
+                  "path": "work-schedule-view",
+                  "text": "Work Schedule View",
+                  "visible": "@Security.IsInRole(new string[]{\"Everybody\"})"
+                },
+                {
+                  "icon": "table_view",
+                  "path": "work-schedules",
+                  "text": "Work Schedules",
+                  "visible": "@Security.IsInRole(new string[]{\"Everybody\"})"
+                }
+              ],
               "name": "panelmenu0",
               "style": {
                 "height": "100%"
@@ -96,7 +109,8 @@
           "name": "footer0",
           "type": "footer"
         }
-      ]
+      ],
+      "type": "layout"
     }
   ],
   "name": "Main"

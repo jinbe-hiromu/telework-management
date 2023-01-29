@@ -7,7 +7,7 @@ using Radzen.Blazor;
 
 namespace WorkScheduleServer.Pages
 {
-    public partial class AcountsComponent
+    public partial class WorkScheduleViewComponent
     {
 
     }

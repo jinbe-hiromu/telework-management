@@ -11,29 +11,23 @@
   "logo": "",
   "name": "WorkScheduleServer",
   "navigation": [
-    "Acounts",
-    "Action Items",
-    "Work Schedules"
+    "Work Schedules",
+    "Work Schedule View"
   ],
   "pages": [
-    "Acounts",
-    "Add Acount",
-    "Edit Acount",
-    "Action Items",
-    "Add Action Item",
-    "Edit Action Item",
     "Work Schedules",
     "Add Work Schedule",
     "Edit Work Schedule",
-    "Edit Application User",
-    "Add Application User",
-    "Application Roles",
-    "Profile",
     "Application Users",
-    "Add Application Role",
+    "Application Roles",
     "Login",
+    "Add Application User",
+    "Add Application Role",
+    "Register Application User",
+    "Edit Application User",
+    "Profile",
     "Unauthorized",
-    "Register Application User"
+    "Work Schedule View"
   ],
   "security": {
     "autoGeneratePages": true,
@@ -42,6 +36,7 @@
     "emailConfirmation": false,
     "layout": "Main",
     "loginLayout": "Login",
+    "loginPage": "Login",
     "overwriteExistingPages": true,
     "provider": "default",
     "sessionRefresh": false,
@@ -49,12 +44,11 @@
     "smtpPassword": "",
     "smtpSSL": false,
     "smtpServer": "",
-    "smtpUser": "",
-    "loginPage": "Login"
+    "smtpUser": ""
   },
   "serverLang": "cs",
   "serverProject": true,
   "serverVersion": "6",
-  "startPage": "Acounts",
+  "startPage": "Work Schedule View",
   "theme": "standard"
 }

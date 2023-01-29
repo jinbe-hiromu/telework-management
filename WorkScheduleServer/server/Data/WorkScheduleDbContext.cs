@@ -27,29 +27,9 @@ namespace WorkScheduleServer.Data
         base.OnModelCreating(builder);
 
 
-        builder.Entity<WorkScheduleServer.Models.WorkScheduleDb.ActionItem>()
-              .Property(p => p.Id)
-              .HasDefaultValueSql("'0'").ValueGeneratedNever();
-
-        builder.Entity<WorkScheduleServer.Models.WorkScheduleDb.ActionItem>()
-              .Property(p => p.EventName)
-              .HasDefaultValueSql("''");
-
         this.OnModelBuilding(builder);
     }
 
-
-    public DbSet<WorkScheduleServer.Models.WorkScheduleDb.Acount> Acounts
-    {
-      get;
-      set;
-    }
-
-    public DbSet<WorkScheduleServer.Models.WorkScheduleDb.ActionItem> ActionItems
-    {
-      get;
-      set;
-    }
 
     public DbSet<WorkScheduleServer.Models.WorkScheduleDb.WorkSchedule> WorkSchedules
     {
