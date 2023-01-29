@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Text.Json;
 using System.Threading.Tasks;
 using WorkScheduleServer.Data;
 using WorkScheduleServer.Models;
@@ -48,10 +49,8 @@ namespace WorkScheduleServer.Controllers
         //   Content-Type: application/json
         // }
         //  Body {
-        //      "AccountInfo" ; {
-        //        "username" : "<ユーザー名>",
-        //        "password" : "<パスワード>"
-        //      }
+        //     "username" : "<ユーザー名>",
+        //     "password" : "<パスワード>"
         //  }
         // [Response]
         //  Body {
@@ -60,10 +59,6 @@ namespace WorkScheduleServer.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] AccountInfo accountInfo)
         {
-            // TODO: [FromBody]のaccountがnullになる問題解決
-            accountInfo.UserName = "Fukaya";
-            accountInfo.Password= "Fukaya@10T";  
-
             if (!string.IsNullOrEmpty(accountInfo.UserName) && !string.IsNullOrEmpty(accountInfo.Password))
             {
                 var result = await signInManager.PasswordSignInAsync(accountInfo.UserName, accountInfo.Password, false, false);
@@ -112,13 +107,11 @@ namespace WorkScheduleServer.Controllers
         // }
         // [Response]
         // Body {
-        //  "WorkScheduleItem" : {　// WorkScheduleServer.Models.WorkScheduleItem
-        //    "Date"        : "2023/1/30",
-        //    "StartTime"   : "2023/1/30 08:40",
-        //    "EndTime"     : "2023/1/30 17:40",
+        //    "Date"        : "2023-01-30",
+        //    "StartTime"   : "2023-01-30T08:40",
+        //    "EndTime"     : "2023-01-30T17:40",
         //    "WorkStyle"   : "出社",　// 出張,テレワーク,有休
         //    "WorkingPlace"   : "阿久比"　// 刈谷,自宅,その他
-        //  }
         // }
         [HttpGet("{year:int}/{month:int}/{day:int}")]
         public async Task<IActionResult> Get([FromHeader] string accessToken, int year, int month, int day)
@@ -134,7 +127,7 @@ namespace WorkScheduleServer.Controllers
             {
                 DateTime date = new DateTime(year, month, day);
                 var workSchedule = workScheduleDbContext.WorkSchedules
-                    .FirstOrDefault<WorkSchedule>(i => i.Date == date);
+                    .FirstOrDefault<WorkSchedule>(i => i.Date == date && i.User == user.UserName);
                 if (workSchedule == null)
                 {
                     return BadRequest($"[{date}] No schedule. It is empty.");
@@ -164,13 +157,11 @@ namespace WorkScheduleServer.Controllers
         //   AccessToken: <アクセストークン>
         // }
         //Body {
-        //  "WorkScheduleItem" : {　// WorkScheduleServer.Models.WorkScheduleItem
-        //    "Date"        : "2023/1/30",
-        //    "StartTime"   : "2023/1/30 08:40",
-        //    "EndTime"     : "2023/1/30 17:40",
+        //    "Date"        : "2023-01-30",
+        //    "StartTime"   : "2023-01-30T08:40",
+        //    "EndTime"     : "2023-01-30T17:40",
         //    "WorkStyle"   : "出社",　// 出張,テレワーク,有休
         //    "WorkingPlace"   : "阿久比"　// 刈谷,自宅,その他
-        //  }
         // }
         [HttpPost("{year:int}/{month:int}/{day:int}")]
         public async Task<IActionResult> Post(
@@ -178,8 +169,6 @@ namespace WorkScheduleServer.Controllers
             int year, int month, int day,
             [FromBody] WorkScheduleItem workScheduleItem)
         {
-            // TODO: [FromBody]のitemがnullになる問題解決
-
             var user = await AccessTokenManager.GetUserFormAccessToken(accessToken, signInManager, userManager, roleManager);
 
             if (user == null)
@@ -191,7 +180,7 @@ namespace WorkScheduleServer.Controllers
             {
                 DateTime date = new DateTime(year, month, day);
                 var workSchedule = workScheduleDbContext.WorkSchedules
-                    .FirstOrDefault<WorkSchedule>(i => i.Date == date);
+                    .FirstOrDefault<WorkSchedule>(i => i.Date == date && i.User == user.UserName);
 
                 if (workSchedule != null)
                 {
@@ -216,7 +205,8 @@ namespace WorkScheduleServer.Controllers
                         StartTime = workScheduleItem.StartTime,
                         EndTime = workScheduleItem.EndTime,
                         WorkStyle = workScheduleItem.WorkStyle,
-                        WorkingPlace = workScheduleItem.WorkingPlace
+                        WorkingPlace = workScheduleItem.WorkingPlace,
+                        User = user.UserName
                     };
 
                     // Add
@@ -240,20 +230,16 @@ namespace WorkScheduleServer.Controllers
         //   AccessToken: <アクセストークン>
         // }
         //Body {
-        //  "WorkScheduleItem" : {　// WorkScheduleServer.Models.WorkScheduleItem
-        //    "Date"        : "2023/1/30",
-        //    "StartTime"   : "2023/1/30 08:40",
-        //    "EndTime"     : "2023/1/30 17:40",
+        //    "Date"        : "2023-01-30",
+        //    "StartTime"   : "2023-01-30T09:00",
+        //    "EndTime"     : "2023-01-30T18:00",
         //    "WorkStyle"   : "出社",　// 出張,テレワーク,有休
         //    "WorkingPlace"   : "阿久比"　// 刈谷,自宅,その他
-        //  }
         // }
         public async Task<IActionResult> Put([FromHeader] string accessToken,
             int year, int month, int day,
             [FromBody] WorkScheduleItem workScheduleItem)
         {
-            // TODO: [FromBody]のitemがnullになる問題解決
-
             return await Post(accessToken, year, month, day, workScheduleItem);
         }
 
@@ -277,7 +263,7 @@ namespace WorkScheduleServer.Controllers
             {
                 DateTime date = new DateTime(year, month, day);
                 var workSchedule = workScheduleDbContext.WorkSchedules
-                    .FirstOrDefault<WorkSchedule>(i => i.Date == date);
+                    .FirstOrDefault<WorkSchedule>(i => i.Date == date && i.User == user.UserName);
 
                 if (workSchedule != null)
                 {
