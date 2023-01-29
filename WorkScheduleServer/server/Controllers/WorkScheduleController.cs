@@ -13,8 +13,6 @@ using WorkScheduleServer.Data;
 using WorkScheduleServer.Models;
 using WorkScheduleServer.Models.WorkScheduleDb;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace WorkScheduleServer.Controllers
 {
     [Route("api/[controller]")]
@@ -23,8 +21,8 @@ namespace WorkScheduleServer.Controllers
     {
         public class AccountInfo
         {
-            public string UserName;
-            public string Password;
+            public string UserName { get; set; }
+            public string Password { get; set; }
         };
 
         private readonly WorkScheduleDbContext workScheduleDbContext;
@@ -48,7 +46,6 @@ namespace WorkScheduleServer.Controllers
         // [Request]
         // Header {
         //   Content-Type: application/json
-        //   AccessToken: <アクセストークン>
         // }
         //  Body {
         //      "AccountInfo" ; {
@@ -63,6 +60,10 @@ namespace WorkScheduleServer.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] AccountInfo account)
         {
+            // TODO: [FromBody]のaccountがnullになる問題解決
+            account.UserName = "Fukaya";
+            account.Password= "Fukaya@10T";  
+
             if (!string.IsNullOrEmpty(account.UserName) && !string.IsNullOrEmpty(account.Password))
             {
                 var result = await signInManager.PasswordSignInAsync(account.UserName, account.Password, false, false);
@@ -177,6 +178,8 @@ namespace WorkScheduleServer.Controllers
             int year, int month, int day,
             [FromBody] WorkScheduleItem item)
         {
+            // TODO: [FromBody]のitemがnullになる問題解決
+
             var user = await AccessTokenManager.GetUserFormAccessToken(accessToken, signInManager, userManager, roleManager);
 
             if (user == null)
@@ -249,6 +252,8 @@ namespace WorkScheduleServer.Controllers
             int year, int month, int day,
             [FromBody] WorkScheduleItem item)
         {
+            // TODO: [FromBody]のitemがnullになる問題解決
+
             return await Post(accessToken, year, month, day, item);
         }
 

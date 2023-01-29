@@ -73,8 +73,7 @@ POST <host>/api/WorkSchedule/Login
 ex. http://127.0.0.1:5000/api/WorkSchedule/Login
  [Request]
  Header {
-   Content-Type: application/json
-   AccessToken: <アクセストークン>
+   Content-Type: application/json; charset=utf-8
  }
  Body {
   "AccountInfo" ; {
@@ -99,7 +98,7 @@ POST時に、usernameとpasswordをBodyにJSONで指定し、応答としてAcce
  ex. http:127.0.0.1:5000/api/WorkSchedule/Logout
  [Request]
  Header {
-   Content-Type: application/json
+   Content-Type: application/json; charset=utf-8
    AccessToken: <アクセストークン>
  }
 ```
@@ -115,7 +114,7 @@ POST時に、AccessTokenをリクエストヘッダーに指定し、URLを呼�
  ex. http:127.0.0.1:5000/api/WorkSchedule/2023/1/30
  [Request]
  Header {
-   Content-Type: application/json
+   Content-Type: application/json; charset=utf-8
    AccessToken: <アクセストークン>
  }
  [Response]
@@ -144,7 +143,7 @@ GET時に、AccessTokenをリクエストヘッダーに指定し、URLを呼び
  POST <host>/api/WorkSchedule/<year>/<month>/<day>
  ex. http:127.0.0.1:5000/api/WorkSchedule/2023/1/30
  Header {
-   Content-Type: application/json
+   Content-Type: application/json; charset=utf-8
    AccessToken: <アクセストークン>
  }
 Body {
@@ -171,7 +170,7 @@ Body {
  ex. http:127.0.0.1:5000/api/WorkSchedule/2023/1/30
 [HttpPut("{year}/{month}/{day}")]
  Header {
-   Content-Type: application/json
+   Content-Type: application/json; charset=utf-8
    AccessToken: <アクセストークン>
  }
 Body {
@@ -197,7 +196,7 @@ Body {
  DELETE <host>/api/WorkSchedule/<year>/<month>/<day>
  ex. http:127.0.0.1:5000/api/WorkSchedule/2023/1/30
  Header {
-   Content-Type: application/json
+   Content-Type: application/json; charset=utf-8
    AccessToken: <アクセストークン>
  }
 ```

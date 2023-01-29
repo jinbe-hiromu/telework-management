@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -39,7 +40,7 @@ namespace WorkScheduleServer.Controllers
             var encrypted = msEncrypt.ToArray();
 
             // Return the encrypted string from the memory stream.
-            return Encoding.UTF8.GetString(encrypted); 
+            return Convert.ToBase64String(encrypted); 
         }
 
         /// <summary>
@@ -51,10 +52,6 @@ namespace WorkScheduleServer.Controllers
         /// <returns>復号された文字列</returns>
         public static string Decrypt(string cipher, string iv = AES_IV, string key = AES_Key)
         {
-            // Declare the string used to hold
-            // the decrypted text.
-            string plaintext = null;
-
             // Create an Aes object
             // with the specified key and IV.
             using var aesAlg = Aes.Create();
@@ -65,12 +62,12 @@ namespace WorkScheduleServer.Controllers
             var decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
             // Create the streams used for decryption.
-            using var msDecrypt = new MemoryStream(Encoding.UTF8.GetBytes(cipher));
+            using var msDecrypt = new MemoryStream(Convert.FromBase64String(cipher));
             using var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
             using var srDecrypt = new StreamReader(csDecrypt);
             // Read the decrypted bytes from the decrypting stream
             // and place them in a string.
-            plaintext = srDecrypt.ReadToEnd();
+            string plaintext = srDecrypt.ReadToEnd();
 
             return plaintext;
         }

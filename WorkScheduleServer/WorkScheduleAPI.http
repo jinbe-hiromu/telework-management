@@ -1,0 +1,72 @@
+
+@host = http://localhost:5000
+@access_token = czWjvBwr4eWYX32ZZsJGhw==
+@username = Fukaya
+@userpass = Fukaya@10T
+
+###
+
+GET https://www.google.com
+
+###
+
+POST {{host}}/api/workschedule/login
+Content-Type: application/json; charset=utf-8
+
+{
+    "AccountInfo" : {
+       "username" : "{{username}}",
+       "password" : "{{userpass}}"
+    }
+}
+
+###
+
+POST {{host}}/api/workschedule/logout
+Content-Type: application/json; charset=utf-8
+AccessToken: {{access_token}}
+
+###
+
+GET {{host}}/api/workschedule/2023/1/30
+Content-Type: application/json; charset=utf-8
+AccessToken: {{access_token}}
+
+###
+
+POST {{host}}/api/workschedule/2023/1/30
+Content-Type: application/json; charset=utf-8
+AccessToken: {{access_token}}
+
+{
+    "WorkScheduleItem" : {
+      "Date"        : "2023-01-30",
+      "StartTime"   : "2023-01-30T08:40",
+      "EndTime"     : "2023-01-30T17:40",
+      "WorkStyle"   : "出社",
+      "WorkingPlace"   : "阿久比"
+    }    
+}
+
+###
+
+PUT {{host}}/api/workschedule/2023/1/30
+Content-Type: application/json; charset=utf-8
+AccessToken: {{access_token}}
+
+{
+    "WorkScheduleItem" : {
+      "Date"        : "2023-01-30",
+      "StartTime"   : "2023-01-30T08:40",
+      "EndTime"     : "2023-01-30T17:40",
+      "WorkStyle"   : "テレワーク",
+      "WorkingPlace"   : "自宅"
+    }    
+}
+
+###
+
+DELETE {{host}}/api/workschedule/2023/1/30
+Content-Type: application/json; charset=utf-8
+AccessToken: {{access_token}}
+
