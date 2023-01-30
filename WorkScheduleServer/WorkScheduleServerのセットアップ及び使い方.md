@@ -2,7 +2,7 @@
 
 ## 概要
 
-WorkSchedulerシステムのデータ管理サービスを提供するWorkScheduleServerに関する仕様に関して記載する。
+WorkSchedulerシステムのデータ管理サービスを提供するWorkScheduleServer仕様に関して記載する。
 
 WorkScheduleServerは、ASP.NET Core Web API とWeb App (Blazor Server)の構成で動作するASP.NET Core 6のシステムとして開発されており、Databaseとしては、SQLiteを使用、ローカルファイル（WorkScheduleDB.db）に各種データを保存、参照を行う構成である。
 
@@ -24,7 +24,7 @@ SQLiteのData Source=%WorkScheduleServer__Path%server/WorkScheduleDB.db;の各�
 
 ### 実行プログラム作成
 
-https://github.com/jinbe-hiromu/work-scheduler/blob/main/WorkScheduleServer/WorkScheduleServer.sln
+[work-scheduler/WorkScheduleServer at main · jinbe-hiromu/work-scheduler (github.com)](https://github.com/jinbe-hiromu/work-scheduler/tree/main/WorkScheduleServer)
 
 Visual Studio 2022で上記ファイルを開いて、ビルドを実施してください。環境変数設定が行っていれば単体で動作します。
 
@@ -34,7 +34,7 @@ Visual Studio 2022で上記ファイルを開いて、ビルドを実施して�
 
 ### API呼出し
 
-最初にLoginのAPIを実施し、アクセストークンを得たから、データ管理に必要な要求（GET、POST、PUT、DELETE）行ってください。先後にLogoutを実施して終了してください。
+最初にLoginのAPIを実行し、アクセストークンを得てから、データ管理に必要な要求（GET、POST、PUT、DELETE）行ってください。最後にLogoutを実施して終了してください。
 
 ### GUI
 
@@ -85,7 +85,7 @@ ex. http://127.0.0.1:5000/api/WorkSchedule/Login
  }
 ```
 
-POST時に、usernameとpasswordをBodyにJSONで指定し、応答としてAccessTokenの値を得る。
+POST時に、usernameとpasswordをBodyにJSONで指定し、応答としてAccessTokenの値を得る。AccessTokenの値は、以降のAPIの呼び出し時に指定が必要です。
 
 ### Logout
 
@@ -105,7 +105,7 @@ POST時に、AccessTokenをリクエストヘッダーに指定し、URLを呼�
 
 ### Get
 
-値の取得
+指定日の値の取得
 
 ```
  GET <host>/api/WorkSchedule/<year>/<month>/<day>
@@ -128,6 +128,44 @@ POST時に、AccessTokenをリクエストヘッダーに指定し、URLを呼�
 GET時に、AccessTokenをリクエストヘッダーに指定し、URLを呼び出す。URLのは、取得したい日付を指定する。
 
 応答として、JSON形式で、WorkScheduleItem型のオブジェクトデータが得られる。
+
+
+
+指定月の値の取得
+
+```
+ GET <host>/api/WorkSchedule/<year>/<month>
+ ex. http:127.0.0.1:5000/api/WorkSchedule/2023/1
+ [Request]
+ Header {
+   Content-Type: application/json; charset=utf-8
+   AccessToken: <アクセストークン>
+ }
+ [Response]
+ Body {
+　[
+    {
+    "Date"        : "2023-01-30",
+    "StartTime"   : "2023-01-30T08:40",
+    "EndTime"     : "2023-01-30T17:40",
+    "WorkStyle"   : "出社",　// 出張,テレワーク,有休
+    "WorkingPlace"   : "阿久比"　// 刈谷,自宅,その他
+    },
+    {
+    "Date"        : "2023-01-31",
+    "StartTime"   : "2023-01-31T09:00",
+    "EndTime"     : "2023-01-31T18:00",
+    "WorkStyle"   : "出社",　// 出張,テレワーク,有休
+    "WorkingPlace"   : "阿久比"　// 刈谷,自宅,その他
+    },
+    　:
+　　]
+　}
+```
+
+GET時に、AccessTokenをリクエストヘッダーに指定し、URLを呼び出す。URLのは、取得したい日付（年/月）を指定する。
+
+応答として、JSON形式で、WorkScheduleItem型のオブジェクトデータの配列が得られる。
 
 
 

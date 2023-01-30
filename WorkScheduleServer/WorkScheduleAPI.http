@@ -32,6 +32,12 @@ AccessToken: {{access_token}}
 
 ###
 
+GET {{host}}/api/workschedule/2023/1
+Content-Type: application/json; charset=utf-8
+AccessToken: {{access_token}}
+
+###
+
 POST {{host}}/api/workschedule/2023/1/30
 Content-Type: application/json; charset=utf-8
 AccessToken: {{access_token}}

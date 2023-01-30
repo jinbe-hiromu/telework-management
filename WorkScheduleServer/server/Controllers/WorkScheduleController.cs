@@ -150,6 +150,77 @@ namespace WorkScheduleServer.Controllers
             }
         }
 
+        // GET <host>/api/WorkSchedule/<year>/<month>
+        // ex. http://127.0.0.1:5000/api/WorkSchedule/2023/1
+        // [Request]
+        // Header {
+        //   Content-Type: application/json
+        //   AccessToken: <アクセストークン>
+        // }
+        // [Response]
+        // Body {
+        //  [
+        //    {
+        //    "Date"        : "2023-01-30",
+        //    "StartTime"   : "2023-01-30T08:40",
+        //    "EndTime"     : "2023-01-30T17:40",
+        //    "WorkStyle"   : "出社",　// 出張,テレワーク,有休
+        //    "WorkingPlace"   : "阿久比"　// 刈谷,自宅,その他
+        //    },
+        //    {
+        //    "Date"        : "2023-01-31",
+        //    "StartTime"   : "2023-01-31T08:40",
+        //    "EndTime"     : "2023-01-31T17:40",
+        //    "WorkStyle"   : "出社",　// 出張,テレワーク,有休
+        //    "WorkingPlace"   : "阿久比"　// 刈谷,自宅,その他
+        //    },
+        //      :
+        //  ]
+        // }
+        [HttpGet("{year:int}/{month:int}")]
+        public async Task<IActionResult> Get([FromHeader] string accessToken, int year, int month)
+        {
+            var user = await AccessTokenManager.GetUserFormAccessToken(accessToken, signInManager, userManager, roleManager);
+
+            if (user == null)
+            {
+                return BadRequest("Invalid access token.");
+            }
+
+            try
+            {
+                DateTime dateBegin = new DateTime(year, month, 1);
+                DateTime dateEnd = dateBegin.AddDays(1); // 翌月1日
+                var workScheduleList = workScheduleDbContext.WorkSchedules
+                    .Where(i => (dateBegin <= i.Date && i.Date < dateEnd) && i.User == user.UserName);
+                if (workScheduleList == null)
+                {
+                    return BadRequest($"[{dateBegin.Year}/{dateBegin.Month}] No schedule. It is empty.");
+                }
+
+               var items = new List<WorkScheduleItem>();
+                foreach ( var workSchedule in workScheduleList )
+                {
+                    items.Add(
+                        new WorkScheduleItem()
+                        {
+                            Date = workSchedule.Date,
+                            StartTime = workSchedule.StartTime,
+                            EndTime = workSchedule.EndTime,
+                            WorkStyle = workSchedule.WorkStyle,
+                            WorkingPlace = workSchedule.WorkingPlace
+                        }
+                    );
+                }
+
+                return Ok(items);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Invalid request.");
+            }
+        }
+
         // POST <host>/api/WorkSchedule/<year>/<month>/<day>
         // ex. http://127.0.0.1:5000/api/WorkSchedule/2023/1/30
         // Header {
