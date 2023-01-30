@@ -37,6 +37,8 @@ namespace WorkScheduleServer.Controllers
             UserManager<ApplicationUser> userManager, 
             RoleManager<IdentityRole> roleManager)
         {
+            if(string.IsNullOrEmpty(accessToken)) { return false; }
+
             var user = GetUserFormAccessToken(accessToken, signInManager, userManager, roleManager);
 
             return (user == null ? false : true);
@@ -48,6 +50,8 @@ namespace WorkScheduleServer.Controllers
             UserManager<ApplicationUser> userManager, 
             RoleManager<IdentityRole> roleManager)
         {
+            if (string.IsNullOrEmpty(accessToken)) { return null; }
+
             var username = AESCryption.Decrypt(accessToken);
 
             ApplicationUser user = await userManager.FindByEmailAsync(username);

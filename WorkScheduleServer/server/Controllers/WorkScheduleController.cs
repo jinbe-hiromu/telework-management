@@ -190,10 +190,10 @@ namespace WorkScheduleServer.Controllers
             try
             {
                 DateTime dateBegin = new DateTime(year, month, 1);
-                DateTime dateEnd = dateBegin.AddDays(1); // 翌月1日
+                DateTime dateEnd = dateBegin.AddMonths(1); // 翌月1日
                 var workScheduleList = workScheduleDbContext.WorkSchedules
                     .Where(i => (dateBegin <= i.Date && i.Date < dateEnd) && i.User == user.UserName);
-                if (workScheduleList == null)
+                if (workScheduleList == null || workScheduleList.Count() <= 0)
                 {
                     return BadRequest($"[{dateBegin.Year}/{dateBegin.Month}] No schedule. It is empty.");
                 }
