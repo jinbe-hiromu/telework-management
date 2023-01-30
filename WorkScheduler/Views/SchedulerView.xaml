@@ -29,7 +29,7 @@
                                Grid.Row="0">
 
             <scheduler:SfScheduler.Behaviors>
-                <toolkit:EventToCommandBehavior EventName="Tapped" Command="{Binding TappedCommand}"/>
+                <toolkit:EventToCommandBehavior EventName="Tapped" x:TypeArguments="scheduler:SchedulerTappedEventArgs" Command="{Binding TappedCommand}" />
             </scheduler:SfScheduler.Behaviors>
         </scheduler:SfScheduler>
 
