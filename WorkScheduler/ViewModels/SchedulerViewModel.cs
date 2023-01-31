@@ -1,20 +1,27 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Syncfusion.Maui.Scheduler;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Tracing;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text.Json;
 using WorkScheduler.Views;
 
 namespace WorkScheduler.ViewModels
 {
-    [QueryProperty(nameof(InputData), "SchedulerAppointment")]
     internal partial class SchedulerViewModel : ObservableObject
     {
-        public SchedulerAppointment InputData
+        private string _host = "http://localhost:5000";
+        private string _accessToken = "czWjvBwr4eWYX32ZZsJGhw==";
+        private HttpClient _client = new HttpClient();
+
+        public SchedulerViewModel()
         {
-            set
-            {
-                SchedulerEvents.Add(value);
-            }
+            TappedCommand = new Command<SchedulerTappedEventArgs>(OnSchedulerTapped);
+            OnViewChangedCommand = new Command<SchedulerViewChangedEventArgs>(OnVeiwChanged);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
         }
 
         private Command<SchedulerTappedEventArgs> _tappedCommand;
@@ -25,26 +32,15 @@ namespace WorkScheduler.ViewModels
             set { _tappedCommand = value; }
         }
 
-        //private Command _tappedCommand;
+        private Command<SchedulerViewChangedEventArgs> _onViewChangedCommand;
 
-        //public Command TappedCommand
-        //{
-        //    get { return _tappedCommand; }
-        //    set { _tappedCommand = value; }
-        //}
+        public Command<SchedulerViewChangedEventArgs> OnViewChangedCommand
+        {
+            get { return _onViewChangedCommand; }
+            set { _onViewChangedCommand = value; }
+        }
 
         public ObservableCollection<SchedulerAppointment> SchedulerEvents { get; set; } = new ObservableCollection<SchedulerAppointment>();
-
-        public SchedulerViewModel()
-        {
-            TappedCommand = new Command<SchedulerTappedEventArgs>(OnSchedulerTapped);
-        }
-
-        [RelayCommand]
-        private async void AddNewSchedule()
-        {
-            await Shell.Current.GoToAsync(nameof(InputDetails));
-        }
 
         private void OnSchedulerTapped(SchedulerTappedEventArgs e)
         {
@@ -56,25 +52,91 @@ namespace WorkScheduler.ViewModels
             }
         }
 
-        //private void OnSchedulerTapped(object sender)
-        //{
-        //    if (e is not null)
-        //    {
-        //        var appointments = e.Appointments;
-        //        var selectedDate = e.Date;
-        //        var schedulerElement = e.Element;
-        //    }
-        //}
+        private async void OnVeiwChanged(SchedulerViewChangedEventArgs e)
+        {
+            if (e is not null)
+            {
+                //var appointments = e.NewView;
+                var selectedDates = e.NewVisibleDates;
 
-        //private void OnSchedulerTapped(object obj)
-        //{
-        //    if (obj is not null)
-        //    {
-        //        var eventArgs = obj as SchedulerTappedEventArgs;
-        //        var appointments = eventArgs.Appointments;
-        //        var selectedDate = eventArgs.Date;
-        //        var schedulerElement = eventArgs.Element;
-        //    }
-        //}
+                foreach(var date in selectedDates)
+                {
+                    var response = await _client.GetAsync($"{_host}/api/workschedule/{date.Year}/{date.Month}/{date.Day}");
+
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        var toast = CommunityToolkit.Maui.Alerts.Toast.Make("StatusCode:" + response.StatusCode);
+                        _ = toast.Show(CancellationToken.None);
+                        continue;
+                    }
+
+                    var jsonString = await response.Content.ReadAsStringAsync();
+
+                    var eventData = JsonSerializer.Deserialize<EventInfo>(jsonString);
+
+                    SchedulerEvents.Add(new SchedulerAppointment
+                    {
+                        StartTime = DateTime.Parse(eventData.StartTime),
+                        EndTime = DateTime.Parse(eventData.EndTime),
+                        Subject = $"{eventData.WorkStyle}[{eventData.WorkingPlace}]",
+                    });
+
+                }
+
+            }
+        }
+
+        [RelayCommand]
+        private async void ShowInputDetails()
+        {
+            var result = await Shell.Current.ShowPopupAsync(new InputDetails());
+            if (result is InputDetailsContact output)
+            {
+                var str = $"{nameof(output.Date)}: {output.Date}{Environment.NewLine}{nameof(output.StartTime)}: {output.StartTime}{Environment.NewLine}{nameof(output.EndTime)}: {output.EndTime}{Environment.NewLine}{nameof(output.WorkStyle)}: {output.WorkStyle}{Environment.NewLine}{nameof(output.WorkingPlace)}: {output.WorkingPlace}{Environment.NewLine}";
+
+
+                var requestBody = new EventInfo
+                {
+                    Date = output.Date.ToString("yyyy-MM-dd"),
+                    StartTime = output.Date.ToString("yyyy-MM-dd") + "T" + output.StartTime.ToString(@"hh\:mm"),        // Format:"2023-01-30T08:40"
+                    EndTime = output.Date.ToString("yyyy-MM-dd") + "T" + output.EndTime.ToString(@"hh\:mm"),
+                    WorkStyle = output.WorkStyle,
+                    WorkingPlace = output.WorkingPlace,
+                };
+                var response = await _client.PostAsJsonAsync($"{_host}/api/workschedule/{output.Date.Year}/{output.Date.Month}/{output.Date.Day}", requestBody);
+
+
+                if (!response.IsSuccessStatusCode) {
+                    var toast = CommunityToolkit.Maui.Alerts.Toast.Make("StatusCode:" + response.StatusCode);
+                    _ = toast.Show(CancellationToken.None);
+                }
+            }
+        }
+
+
+        [RelayCommand]
+        private void EditScheduler()
+        {
+            
+        }
+
+
+        [RelayCommand]
+        private void DeleteScheduler()
+        {
+            
+        }
+
     }
+
+    internal class EventInfo
+    {
+        public string Date { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
+        public string WorkStyle { get; set; }
+        public string WorkingPlace { get; set; }
+    }
+
 }

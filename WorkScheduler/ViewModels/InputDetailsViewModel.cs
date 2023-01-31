@@ -5,8 +5,8 @@ namespace WorkScheduler.ViewModels;
 public class InputDetailsContact
 {
 	public DateTime Date { get; init; }
-	public DateTime StartTime { get; init; } 
-	public DateTime EndTime { get; init; } 
+	public TimeSpan StartTime { get; init; } 
+	public TimeSpan EndTime { get; init; } 
 	public string WorkStyle { get; init; }  
 	public string WorkingPlace { get; init; }
 }
@@ -29,8 +29,8 @@ public class InputDetailsViewModel : BindableObject
 	private static InputDetailsContact DefaultContact => new InputDetailsContact
 	{ 
 		Date = DateTime.Now,
-		StartTime = new DateTime(2023, 1, 25, 8, 40, 0),
-		EndTime = new DateTime(2023, 1, 25, 17, 40, 0),
+		StartTime = new TimeSpan(8, 40, 0),
+		EndTime = new TimeSpan(17, 40, 0),
 		WorkStyle= _workStyleGoingToWork,
 		WorkingPlace = _workingPlaceAgui,
 	};
@@ -38,8 +38,8 @@ public class InputDetailsViewModel : BindableObject
 	public event Action<object> CloseRequested;
 	public Size Size { get; } = new Size(500, 400);
  	public DateTime Date { get; set; }
-	public DateTime StartTime { get; set; } 
-	public DateTime EndTime { get; set; } 
+	public TimeSpan StartTime { get; set; } 
+	public TimeSpan EndTime { get; set; } 
 	public ObservableCollection<string> WorkStyles { get; } = new();
 	private string _selectedWorkStyle;
 	public string SelectedWorkStyle 

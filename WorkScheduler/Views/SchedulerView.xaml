@@ -30,13 +30,14 @@
 
             <scheduler:SfScheduler.Behaviors>
                 <toolkit:EventToCommandBehavior EventName="Tapped" x:TypeArguments="scheduler:SchedulerTappedEventArgs" Command="{Binding TappedCommand}" />
+                <toolkit:EventToCommandBehavior EventName="ViewChanged" x:TypeArguments="scheduler:SchedulerViewChangedEventArgs" Command="{Binding OnVeiwChangedCommand}" />
             </scheduler:SfScheduler.Behaviors>
         </scheduler:SfScheduler>
 
         <HorizontalStackLayout Spacing="20" Grid.Row="1" VerticalOptions="Center" HorizontalOptions="End" Margin="5">
-            <Button Text="新規" Command="{Binding AddNewScheduleCommand}"/>
-            <Button Text="編集"/>
-            <Button Text="削除"/>
+            <Button Text="新規" Command="{Binding ShowInputDetailsCommand}"/>
+            <Button Text="編集" Command="{Binding EditScheduleCommand}"/>
+            <Button Text="削除" Command="{Binding DeleteScheduleCommand}"/>
         </HorizontalStackLayout>
     </Grid>
 
