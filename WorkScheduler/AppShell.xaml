@@ -13,43 +13,4 @@
         ContentTemplate="{DataTemplate view:LoginView}"
         Route="LoginView" />
 
-
-    <!--<TabBar Title="">
-        <Tab Title="MainTab" Route="MainTab">
-            <ShellContent
-                Title="Main"
-                ContentTemplate="{DataTemplate view:HamburgerMenu}"
-                Route="MainPage" />
-        </Tab>
-
-        <Tab Title="SubTab" Route="SubTab">
-            <ShellContent
-                Title="Sub"
-                ContentTemplate="{DataTemplate view:InputDetails}"
-                Shell.BackgroundColor="LightBlue"
-                Route="SubPage" />
-
-            <ShellContent
-                Title="Sub2"
-                ContentTemplate="{DataTemplate local:SubPage2}"
-                Shell.BackgroundColor="LightBlue"
-                Route="SubPage2" />
-        </Tab>
-    </TabBar>-->
-
-    <!--<FlyoutItem Title="MainMenu" Route="MainMenu">
-        <ShellContent
-                Title="Main"
-                ContentTemplate="{DataTemplate view:HamburgerMenu}"
-                Route="MainPage" />
-    </FlyoutItem>-->
-
-
-
-    <!--<MenuItem Text="Log Out"
-              Command="{Binding LogOutCommand}"
-              CommandParameter=""
-              Clicked="{RogOutButton_Clicked}" />-->
-
-
 </Shell>

@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:WorkScheduler.Views"
+             xmlns:view="clr-namespace:WorkScheduler.Views"
              xmlns:vm="clr-namespace:WorkScheduler.ViewModels"
              xmlns:model="clr-namespace:WorkScheduler.Models"
              x:Class="WorkScheduler.Views.HamburgerMenu"
              Padding="0,40,0,0"
              IconImageSource="hamburger.png"
              Title="HamburgerMenu">
-    <ContentPage.BindingContext>
+    <!--<ContentPage.BindingContext>
         <vm:HamburgerMenuViewModel />
-    </ContentPage.BindingContext>
+    </ContentPage.BindingContext>-->
     <CollectionView x:Name="collectionView"
                     x:FieldModifier="public"
                     SelectionMode="Single">
         <CollectionView.ItemsSource>
             <x:Array Type="{x:Type model:FlyoutPageItem}">
-                <model:FlyoutPageItem Title="Contacts"
+                <model:FlyoutPageItem Title="予定"
                                       IconSource="contacts.png"
-                                      TargetType="{x:Type local:SchedulerView}" />
-                <model:FlyoutPageItem Title="Reminders"
+                                      TargetType="{x:Type view:SchedulerView}" />
+                <model:FlyoutPageItem Title="実績"
                                       IconSource="reminders.png"
-                                      TargetType="{x:Type local:DataQueryView}" />
+                                      TargetType="{x:Type view:DataQueryView}" />
             </x:Array>
         </CollectionView.ItemsSource>
         <CollectionView.ItemTemplate>
