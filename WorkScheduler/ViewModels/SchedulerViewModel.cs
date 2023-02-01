@@ -123,35 +123,54 @@ namespace WorkScheduler.ViewModels
             var result = await Shell.Current.ShowPopupAsync(new InputDetails());
             if (result is InputDetailsContact output)
             {
-                var eventInfo = new EventInfo
-                {
-                    Date = output.Date.ToString("yyyy-MM-dd"),
-                    StartTime = output.Date.ToString("yyyy-MM-dd") + "T" + output.StartTime.ToString(@"hh\:mm"),        // Format:"2023-01-30T08:40"
-                    EndTime = output.Date.ToString("yyyy-MM-dd") + "T" + output.EndTime.ToString(@"hh\:mm"),
-                    WorkStyle = output.WorkStyle,
-                    WorkingPlace = output.WorkingPlace,
-                };
-
-                var request = new RestRequest($"/api/workschedule/{output.Date.Year}/{output.Date.Month}/{output.Date.Day}");
-                request.AddHeader("AccessToken", _accessToken);
-                request.AddBody(eventInfo);
-                try
-                {
-                    var response = await _client.PostAsync(request);
-                    await UpdateScheduler(_visibleDates);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex);
-                }
+                await AddEvent(output);
             }
         }
 
+        private async Task AddEvent(InputDetailsContact output)
+        {
+            var eventInfo = new EventInfo
+            {
+                Date = output.Date.ToString("yyyy-MM-dd"),
+                StartTime = output.Date.ToString("yyyy-MM-dd") + "T" + output.StartTime.ToString(@"hh\:mm"),        // Format:"2023-01-30T08:40"
+                EndTime = output.Date.ToString("yyyy-MM-dd") + "T" + output.EndTime.ToString(@"hh\:mm"),
+                WorkStyle = output.WorkStyle,
+                WorkingPlace = output.WorkingPlace,
+            };
+
+            var request = new RestRequest($"/api/workschedule/{output.Date.Year}/{output.Date.Month}/{output.Date.Day}");
+            request.AddHeader("AccessToken", _accessToken);
+            request.AddBody(eventInfo);
+            try
+            {
+                var response = await _client.PostAsync(request);
+                await UpdateScheduler(_visibleDates);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
 
         [RelayCommand]
-        private void EditSchedule()
+        private async void EditSchedule()
         {
+            var info = DivideSubject(_selectedAppointment.Subject);
+            var view = new InputDetails();
+            view.BindingContext = new InputDetailsViewModel(new InputDetailsContact
+            {
+                Date = _selectedAppointment.StartTime,
+                StartTime = new TimeSpan(_selectedAppointment.StartTime.Hour, _selectedAppointment.StartTime.Minute, _selectedAppointment.StartTime.Second),
+                EndTime = new TimeSpan(_selectedAppointment.EndTime.Hour, _selectedAppointment.EndTime.Minute, _selectedAppointment.EndTime.Second),
+                WorkStyle = info.WorkStyle,
+                WorkingPlace = info.WorkingPlace
+            });
 
+            var result = await Shell.Current.ShowPopupAsync(view);
+            if (result is InputDetailsContact output)
+            {
+                await AddEvent(output);
+            }
         }
 
 
@@ -175,6 +194,14 @@ namespace WorkScheduler.ViewModels
             }
             return $"{workStyle}[{workingPlace}]";
         }
+
+        private EventInfo DivideSubject(string subject)
+        {
+            var workStyle = subject.Substring(0, subject.IndexOf('['));
+            var workingPlace = subject.Substring(subject.IndexOf('[') + 1, subject.IndexOf(']') - subject.IndexOf('[') - 1);
+
+            return new EventInfo { WorkStyle = workStyle, WorkingPlace = workingPlace };
+        }
     }
 
     internal class EventInfo
@@ -185,5 +212,4 @@ namespace WorkScheduler.ViewModels
         public string WorkStyle { get; set; }
         public string WorkingPlace { get; set; }
     }
-
 }
