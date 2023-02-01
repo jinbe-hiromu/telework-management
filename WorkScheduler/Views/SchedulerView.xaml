@@ -27,10 +27,11 @@
                                AllowedViews="Day,WorkWeek,Month"
                                AppointmentsSource="{Binding SchedulerEvents}"
                                Grid.Row="0">
+            <!--ViewChanged="OnViewChanged">-->
 
             <scheduler:SfScheduler.Behaviors>
+                <toolkit:EventToCommandBehavior EventName="ViewChanged" x:TypeArguments="scheduler:SchedulerViewChangedEventArgs" Command="{Binding OnViewChangedCommand}" />
                 <toolkit:EventToCommandBehavior EventName="Tapped" x:TypeArguments="scheduler:SchedulerTappedEventArgs" Command="{Binding TappedCommand}" />
-                <toolkit:EventToCommandBehavior EventName="ViewChanged" x:TypeArguments="scheduler:SchedulerViewChangedEventArgs" Command="{Binding OnVeiwChangedCommand}" />
             </scheduler:SfScheduler.Behaviors>
         </scheduler:SfScheduler>
 

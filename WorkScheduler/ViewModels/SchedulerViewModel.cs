@@ -1,10 +1,9 @@
 ﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using RestSharp;
 using Syncfusion.Maui.Scheduler;
 using System.Collections.ObjectModel;
-using System.Diagnostics.Tracing;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using WorkScheduler.Views;
@@ -13,15 +12,20 @@ namespace WorkScheduler.ViewModels
 {
     internal partial class SchedulerViewModel : ObservableObject
     {
-        private string _host = "http://localhost:5000";
         private string _accessToken = "czWjvBwr4eWYX32ZZsJGhw==";
-        private HttpClient _client = new HttpClient();
+        private RestClient _client = new RestClient("http://localhost:5000");
 
         public SchedulerViewModel()
         {
             TappedCommand = new Command<SchedulerTappedEventArgs>(OnSchedulerTapped);
-            OnViewChangedCommand = new Command<SchedulerViewChangedEventArgs>(OnVeiwChanged);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+            OnViewChangedCommand = new Command<SchedulerViewChangedEventArgs>(OnVeiwChangedAsync);
+            //_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+            SchedulerEvents.Add(new SchedulerAppointment
+            {
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now.AddHours(1),
+                Subject = "test"
+            });
         }
 
         private Command<SchedulerTappedEventArgs> _tappedCommand;
@@ -52,17 +56,16 @@ namespace WorkScheduler.ViewModels
             }
         }
 
-        private async void OnVeiwChanged(SchedulerViewChangedEventArgs e)
+        private async void OnVeiwChangedAsync(SchedulerViewChangedEventArgs e)
         {
             if (e is not null)
             {
-                //var appointments = e.NewView;
-                var selectedDates = e.NewVisibleDates;
-
-                foreach(var date in selectedDates)
+                foreach (var visibleDate in e.NewVisibleDates)
                 {
-                    var response = await _client.GetAsync($"{_host}/api/workschedule/{date.Year}/{date.Month}/{date.Day}");
+                    var request = new RestRequest($"/api/workschedule/{visibleDate.Year}/{visibleDate.Month}/{visibleDate.Day}");
+                    request.AddHeader("AccessToken", _accessToken);
 
+                    var response = await _client.GetAsync(request);
 
                     if (!response.IsSuccessStatusCode)
                     {
@@ -71,19 +74,17 @@ namespace WorkScheduler.ViewModels
                         continue;
                     }
 
-                    var jsonString = await response.Content.ReadAsStringAsync();
+                    //var jsonString = response.Content.ReadAsStringAsync().Result;
 
-                    var eventData = JsonSerializer.Deserialize<EventInfo>(jsonString);
+                    //var eventData = JsonSerializer.Deserialize<EventInfo>(jsonString);
 
-                    SchedulerEvents.Add(new SchedulerAppointment
-                    {
-                        StartTime = DateTime.Parse(eventData.StartTime),
-                        EndTime = DateTime.Parse(eventData.EndTime),
-                        Subject = $"{eventData.WorkStyle}[{eventData.WorkingPlace}]",
-                    });
-
+                    //SchedulerEvents.Add(new SchedulerAppointment
+                    //{
+                    //    StartTime = DateTime.Parse(eventData.StartTime),
+                    //    EndTime = DateTime.Parse(eventData.EndTime),
+                    //    Subject = $"{eventData.WorkStyle}[{eventData.WorkingPlace}]",
+                    //});
                 }
-
             }
         }
 
@@ -104,13 +105,14 @@ namespace WorkScheduler.ViewModels
                     WorkStyle = output.WorkStyle,
                     WorkingPlace = output.WorkingPlace,
                 };
-                var response = await _client.PostAsJsonAsync($"{_host}/api/workschedule/{output.Date.Year}/{output.Date.Month}/{output.Date.Day}", requestBody);
+                //var response = await _client.PostAsJsonAsync($"{_host}/api/workschedule/{output.Date.Year}/{output.Date.Month}/{output.Date.Day}", requestBody);
 
 
-                if (!response.IsSuccessStatusCode) {
-                    var toast = CommunityToolkit.Maui.Alerts.Toast.Make("StatusCode:" + response.StatusCode);
-                    _ = toast.Show(CancellationToken.None);
-                }
+                //if (!response.IsSuccessStatusCode)
+                //{
+                //    var toast = CommunityToolkit.Maui.Alerts.Toast.Make("StatusCode:" + response.StatusCode);
+                //    _ = toast.Show(CancellationToken.None);
+                //}
             }
         }
 
@@ -118,14 +120,14 @@ namespace WorkScheduler.ViewModels
         [RelayCommand]
         private void EditScheduler()
         {
-            
+
         }
 
 
         [RelayCommand]
         private void DeleteScheduler()
         {
-            
+
         }
 
     }
