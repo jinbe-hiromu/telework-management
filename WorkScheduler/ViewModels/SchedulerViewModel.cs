@@ -51,7 +51,7 @@ namespace WorkScheduler.ViewModels
 
         private void OnSchedulerTapped(SchedulerTappedEventArgs e)
         {
-            if (e is not null)
+            if (e is not null && e.Appointments is not null)
             {
                 _selectedAppointment = (SchedulerAppointment)e.Appointments.First();
             }
@@ -156,17 +156,17 @@ namespace WorkScheduler.ViewModels
         private async void EditSchedule()
         {
             var info = DivideSubject(_selectedAppointment.Subject);
-            var view = new InputDetails();
-            view.BindingContext = new InputDetailsViewModel(new InputDetailsContact
+            //var view = new InputDetails();
+            var arg = new InputDetailsContact
             {
                 Date = _selectedAppointment.StartTime,
                 StartTime = new TimeSpan(_selectedAppointment.StartTime.Hour, _selectedAppointment.StartTime.Minute, _selectedAppointment.StartTime.Second),
                 EndTime = new TimeSpan(_selectedAppointment.EndTime.Hour, _selectedAppointment.EndTime.Minute, _selectedAppointment.EndTime.Second),
                 WorkStyle = info.WorkStyle,
                 WorkingPlace = info.WorkingPlace
-            });
+            };
 
-            var result = await Shell.Current.ShowPopupAsync(view);
+            var result = await Shell.Current.ShowPopupAsync(new InputDetails(arg));
             if (result is InputDetailsContact output)
             {
                 await AddEvent(output);

@@ -5,9 +5,10 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:vm="clr-namespace:WorkScheduler.ViewModels"
              Size="{Binding Size}" >
-    <toolkit:Popup.BindingContext>
+
+    <!--<toolkit:Popup.BindingContext>
         <vm:InputDetailsViewModel />
-    </toolkit:Popup.BindingContext>
+    </toolkit:Popup.BindingContext>-->
     <VerticalStackLayout>
         <Label Text="いつ" VerticalOptions="Start" HorizontalOptions="Start" />
         <DatePicker Date="{Binding Date}" Format="yyyy/MM/dd"/>
