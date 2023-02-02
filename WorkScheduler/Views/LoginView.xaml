@@ -12,7 +12,7 @@
         <Label Text="ユーザ名" VerticalOptions="Start" HorizontalOptions="Start" />
         <Entry Text="{Binding UserName}" />
         <Label Text="パスワード" VerticalOptions="Start" HorizontalOptions="Start" />
-        <Entry Text="{Binding UserName}" IsPassword="True" />
+        <Entry Text="{Binding Password}" IsPassword="True" />
         <Button Text="ログイン" Command="{Binding LoginCommand}"/>
     </VerticalStackLayout>
 </ContentPage>
