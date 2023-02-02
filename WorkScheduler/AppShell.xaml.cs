@@ -19,6 +19,7 @@ public partial class AppShell : Shell
         Routes.Add(nameof(InputDetails), typeof(InputDetails));
         Routes.Add(nameof(MainPage), typeof(MainPage));
         Routes.Add(nameof(HamburgerMenu), typeof(HamburgerMenu));
+        Routes.Add(nameof(LoginView), typeof(LoginView));
 
 
         foreach (var item in Routes)

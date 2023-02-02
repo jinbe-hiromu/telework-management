@@ -1,7 +1,8 @@
 <FlyoutPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             xmlns:view="clr-namespace:WorkScheduler.Views"
-            x:Class="WorkScheduler.Views.MainPage">
+            x:Class="WorkScheduler.Views.MainPage"
+            FlyoutLayoutBehavior="Split">
     <FlyoutPage.Flyout>
         <view:HamburgerMenu x:Name="flyoutPage" />
     </FlyoutPage.Flyout>
