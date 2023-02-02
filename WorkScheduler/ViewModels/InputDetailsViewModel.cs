@@ -1,15 +1,7 @@
 using System.Collections.ObjectModel;
+using WorkScheduler.Models;
 
 namespace WorkScheduler.ViewModels;
-
-public class InputDetailsContact
-{
-    public DateTime Date { get; init; }
-    public TimeSpan StartTime { get; init; }
-    public TimeSpan EndTime { get; init; }
-    public string WorkStyle { get; init; }
-    public string WorkingPlace { get; init; }
-}
 
 public class InputDetailsViewModel : BindableObject
 {
