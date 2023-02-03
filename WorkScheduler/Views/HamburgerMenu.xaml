@@ -9,9 +9,11 @@
              Padding="0,40,0,0"
              IconImageSource="hamburger.png"
              Title="HamburgerMenu">
-    <!--<ContentPage.BindingContext>
+
+    <ContentPage.BindingContext>
         <vm:HamburgerMenuViewModel />
-    </ContentPage.BindingContext>-->
+    </ContentPage.BindingContext>
+
     <CollectionView x:Name="collectionView"
                     x:FieldModifier="public"
                     SelectionMode="Single">

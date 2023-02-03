@@ -1,24 +1,27 @@
-﻿using CommunityToolkit.Maui.Views;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Net;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using RestSharp;
 using Syncfusion.Maui.Scheduler;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using WorkScheduler.Models;
 using WorkScheduler.Views;
 
 namespace WorkScheduler.ViewModels
 {
-    internal partial class SchedulerViewModel : ObservableObject
+    public partial class SchedulerViewModel : ObservableObject
     {
         private string _accessToken = "czWjvBwr4eWYX32ZZsJGhw==";
         private RestClient _client = new RestClient("http://localhost:5000");
         private IList<DateTime> _visibleDates;
         private SchedulerAppointment _selectedAppointment;
 
-        public SchedulerViewModel()
+        public SchedulerViewModel() => throw new NotImplementedException();
+
+        public SchedulerViewModel(CookieContainer cookies)
         {
             TappedCommand = new Command<SchedulerTappedEventArgs>(OnSchedulerTapped);
             OnViewChangedCommand = new Command<SchedulerViewChangedEventArgs>(OnVeiwChangedAsync);
@@ -29,6 +32,9 @@ namespace WorkScheduler.ViewModels
                 EndTime = DateTime.Now.AddHours(1),
                 Subject = "test"
             });
+
+            var cookie = cookies.GetCookies(new Uri("http://localhost")).First();
+            _client.AddCookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain);
         }
 
         private Command<SchedulerTappedEventArgs> _tappedCommand;
@@ -77,7 +83,7 @@ namespace WorkScheduler.ViewModels
             foreach (var targetDate in targetDates)
             {
                 var request = new RestRequest($"/api/workschedule/{targetDate.Year}/{targetDate.Month}/{targetDate.Day}");
-                request.AddHeader("AccessToken", _accessToken);
+                //request.AddHeader("AccessToken", _accessToken);
 
                 try
                 {

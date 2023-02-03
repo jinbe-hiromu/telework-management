@@ -4,15 +4,18 @@
              x:Class="WorkScheduler.Views.LoginView"
              xmlns:vm="clr-namespace:WorkScheduler.ViewModels"
              Title="LoginView">
+
     <ContentPage.BindingContext>
         <vm:LoginViewModel />
     </ContentPage.BindingContext>
+
     <VerticalStackLayout>
         <Label Text="Work Scheduler" VerticalOptions="Start" HorizontalOptions="Center" FontSize="30" />
         <Label Text="ユーザ名" VerticalOptions="Start" HorizontalOptions="Start" />
-        <Entry Text="{Binding UserName}" />
+        <Entry Text="{Binding Username}" />
         <Label Text="パスワード" VerticalOptions="Start" HorizontalOptions="Start" />
         <Entry Text="{Binding Password}" IsPassword="True" />
         <Button Text="ログイン" Command="{Binding LoginCommand}"/>
     </VerticalStackLayout>
+    
 </ContentPage>
