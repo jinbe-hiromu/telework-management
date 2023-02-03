@@ -1,14 +1,20 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Net;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace WorkScheduler.ViewModels;
 
-internal partial class DataQueryViewModel : ObservableObject
+public partial class DataQueryViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string _source;
+    private UrlWebViewSource _source;
+    [ObservableProperty]
+    private CookieContainer _cookies;
 
-    public DataQueryViewModel()
+    public DataQueryViewModel() : this(new CookieContainer()) { }
+
+    public DataQueryViewModel(CookieContainer cookies)
     {
-        _source = "https://learn.microsoft.com/dotnet/maui";
+        _source = new UrlWebViewSource { Url = $"http://localhost:5000/api/WorkSchedule/2023/2/3?accesskey={cookies.GetCookieHeader(new Uri("http://localhost:5000"))}" };
+        _cookies = cookies;
     }
 }
