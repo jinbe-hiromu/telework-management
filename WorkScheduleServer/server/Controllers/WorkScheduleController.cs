@@ -22,20 +22,21 @@ namespace WorkScheduleServer.Controllers
             _dbContext = workScheduleDbContext;
         }
 
-        // GET <host>/api/WorkSchedule/<year>/<month>/<day>
+        // GET <host>/api/WorkSchedule/<year>/<month>[/<day>]
+        // ex. http://127.0.0.1:5000/api/WorkSchedule/2023/1
         // ex. http://127.0.0.1:5000/api/WorkSchedule/2023/1/30
         // [Request]
         // Header {
         //   Content-Type: application/json
         // }
         // [Response]
-        // Body {
+        // Body [{
         //    "Date"        : "2023-01-30",
         //    "StartTime"   : "2023-01-30T08:40",
         //    "EndTime"     : "2023-01-30T17:40",
         //    "WorkStyle"   : "出社",　// 出張,テレワーク,有休
         //    "WorkingPlace"   : "阿久比"　// 刈谷,自宅,その他
-        // }
+        // }]
         [HttpGet("{year:int}/{month:int}/{day:int?}")]
         [Authorize]
         public async Task<IActionResult> Get(int year, int month, int? day)
