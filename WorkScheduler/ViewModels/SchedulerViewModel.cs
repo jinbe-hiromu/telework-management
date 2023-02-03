@@ -4,7 +4,6 @@ using System.Net;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Newtonsoft.Json;
 using RestSharp;
 using Syncfusion.Maui.Scheduler;
 using WorkScheduler.Models;
@@ -14,18 +13,14 @@ namespace WorkScheduler.ViewModels
 {
     public partial class SchedulerViewModel : ObservableObject
     {
-        private string _accessToken = "czWjvBwr4eWYX32ZZsJGhw==";
         private RestClient _client = new RestClient("http://localhost:5000");
         private IList<DateTime> _visibleDates;
         private SchedulerAppointment _selectedAppointment;
-
-        public SchedulerViewModel() => throw new NotImplementedException();
 
         public SchedulerViewModel(CookieContainer cookies)
         {
             TappedCommand = new Command<SchedulerTappedEventArgs>(OnSchedulerTapped);
             OnViewChangedCommand = new Command<SchedulerViewChangedEventArgs>(OnVeiwChangedAsync);
-            //_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
             SchedulerEvents.Add(new SchedulerAppointment
             {
                 StartTime = DateTime.Now,
@@ -83,42 +78,17 @@ namespace WorkScheduler.ViewModels
             foreach (var targetDate in targetDates)
             {
                 var request = new RestRequest($"/api/workschedule/{targetDate.Year}/{targetDate.Month}/{targetDate.Day}");
-                //request.AddHeader("AccessToken", _accessToken);
 
-                try
-                {
-                    // 予定が0件の場合もExceptionが発生するため。
-                    var response = await _client.GetAsync(request);
-                    // 予定が1件の場合非配列JSON、予定が複数件の場合配列型JSON
-                    if (response.Content[0] == '[')
-                    {
-                        var schedules = JsonConvert.DeserializeObject<List<Schedule>>(response.Content);
-                        foreach (var schedule in schedules)
-                        {
-                            SchedulerEvents.Add(new SchedulerAppointment
-                            {
-                                StartTime = schedule.StartTime,
-                                EndTime = schedule.EndTime,
-                                Subject = CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
-                            });
-                        }
-                    }
-                    else
-                    {
-                        var schedule = JsonConvert.DeserializeObject<Schedule>(response.Content);
-                        SchedulerEvents.Add(new SchedulerAppointment
-                        {
-                            StartTime = schedule.StartTime,
-                            EndTime = schedule.EndTime,
-                            Subject = CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
-                        });
-                    }
+                var schedules = await _client.GetAsync<IEnumerable<Schedule>>(request);
 
-                }
-                catch (Exception ex)
+                foreach (var schedule in schedules)
                 {
-                    // Do nothing
-                    Debug.WriteLine(ex);
+                    SchedulerEvents.Add(new SchedulerAppointment
+                    {
+                        StartTime = schedule.StartTime,
+                        EndTime = schedule.EndTime,
+                        Subject = CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
+                    });
                 }
             }
         }
@@ -145,8 +115,8 @@ namespace WorkScheduler.ViewModels
             };
 
             var request = new RestRequest($"/api/workschedule/{output.Date.Year}/{output.Date.Month}/{output.Date.Day}");
-            request.AddHeader("AccessToken", _accessToken);
             request.AddBody(eventInfo);
+
             try
             {
                 var response = await _client.PostAsync(request);
@@ -186,7 +156,7 @@ namespace WorkScheduler.ViewModels
             if (_selectedAppointment is not null)
             {
                 var request = new RestRequest($"/api/workschedule/{_selectedAppointment.StartTime.Year}/{_selectedAppointment.StartTime.Month}/{_selectedAppointment.StartTime.Day}");
-                request.AddHeader("AccessToken", _accessToken);
+
                 await _client.DeleteAsync(request);
                 await UpdateScheduler(_visibleDates);
             }
