@@ -1,30 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Net.Http;
-using System.Text.Encodings.Web;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
+using Radzen;
+using System;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using System.IdentityModel.Tokens.Jwt;
+using WorkScheduleServer.Authentication;
 using WorkScheduleServer.Data;
 using WorkScheduleServer.Models;
-using WorkScheduleServer.Authentication;
-using Radzen;
-using System.IO;
 
 namespace WorkScheduleServer
 {
@@ -58,8 +52,43 @@ namespace WorkScheduleServer
             });
 
             services.AddHttpClient();
-            services.AddAuthentication();
-            services.AddAuthorization();
+            services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+			})
+            .AddJwtBearer(options =>
+            {
+	            // optionally can make sure the user still exists in the db on each call
+	            options.Events = new JwtBearerEvents
+	            {
+		            OnTokenValidated = context =>
+		            {
+			            var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
+			            var user = userManager.FindByIdAsync(context.Principal.Identity.Name);
+			            if (user == null)
+			            {
+				            // return unauthorized if user no longer exists
+				            context.Fail("Unauthorized");
+			            }
+			            return Task.CompletedTask;
+		            }
+	            };
+	            
+	            options.SaveToken = true;
+	            options.RequireHttpsMetadata = false;
+	            options.TokenValidationParameters = new TokenValidationParameters()
+	            {
+		            ValidateIssuer = false,
+		            ValidateAudience = false,
+		            // ValidAudience = Configuration["JWT:Audience"],
+		            // ValidIssuer = Configuration["JWT:Issuer"],
+		            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Key"]))
+	            };
+            });
+
+			services.AddAuthorization();
             services.AddDbContext<ApplicationIdentityDbContext>(options =>
             {
                 options.UseSqlite(
