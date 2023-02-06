@@ -2,9 +2,9 @@
 using System.Net;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using RestSharp;
 using WorkScheduler.Services;
-using WorkScheduler.Views;
 
 namespace WorkScheduler.ViewModels
 {
@@ -15,23 +15,19 @@ namespace WorkScheduler.ViewModels
         [ObservableProperty]
         private string _password = string.Empty;
 
-        private readonly RestClient _client;
         private readonly INavigationService _navigation;
+        private readonly RestClient _client;
         private readonly CookieContainer _cookies;
-
-        public Command LoginCommand { get; }
-
-        public LoginViewModel() => throw new InvalidOperationException();
 
         public LoginViewModel(INavigationService navigation, CookieContainer cookies)
         {
-            _client = new RestClient("http://localhost:5000");
             _navigation = navigation;
+            _client = new RestClient("http://localhost:5000");
             _cookies = cookies;
-            LoginCommand = new(OnLoginClicked);
         }
 
-        private async void OnLoginClicked()
+        [RelayCommand]
+        private async Task LoginAsync()
         {
             var request = new RestRequest($"/account/login?redirectUrl=", Method.Post);
             request.AddParameter("Username", Username);
@@ -44,13 +40,7 @@ namespace WorkScheduler.ViewModels
                 if (response.StatusCode == HttpStatusCode.OK && response.Cookies.Count > 0)
                 {
                     _cookies.Add(new Uri("http://localhost"), response.Cookies);
-                    _cookies.Add(new Uri("http://localhost:5000"), response.Cookies);
-                    _cookies.Add(new Uri("http://localhost:5000/api"), response.Cookies);
-                    _cookies.Add(new Uri("http://localhost:5000/api/WorkSchedule"), response.Cookies);
-                    _cookies.Add(new Uri("http://localhost:5000/api/WorkSchedule/2023"), response.Cookies);
-                    _cookies.Add(new Uri("http://localhost:5000/api/WorkSchedule/2023/2"), response.Cookies);
-                    _cookies.Add(new Uri("http://localhost:5000/api/WorkSchedule/2023/2/3"), response.Cookies);
-                    await _navigation.NavigateTo<MainPage>();
+                    await _navigation.NavigateToMain();
                 }
                 else
                 {
