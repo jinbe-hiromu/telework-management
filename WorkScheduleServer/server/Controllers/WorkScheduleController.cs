@@ -23,116 +23,60 @@ namespace WorkScheduleServer.Controllers
             _dbContext = workScheduleDbContext;
         }
 
-        // GET <host>/api/WorkSchedule/<year>/<month>/<day>
+        // GET <host>/api/WorkSchedule/<year>/<month>[/<day>]
+        // ex. http://127.0.0.1:5000/api/WorkSchedule/2023/1
         // ex. http://127.0.0.1:5000/api/WorkSchedule/2023/1/30
         // [Request]
         // Header {
         //   Content-Type: application/json
         // }
         // [Response]
-        // Body {
+        // Body [{
         //    "Date"        : "2023-01-30",
         //    "StartTime"   : "2023-01-30T08:40",
         //    "EndTime"     : "2023-01-30T17:40",
         //    "WorkStyle"   : "出社",　// 出張,テレワーク,有休
         //    "WorkingPlace"   : "阿久比"　// 刈谷,自宅,その他
-        // }
-        [HttpGet("{year:int}/{month:int}/{day:int}")]
+        // }]
+        [HttpGet("{year:int}/{month:int}/{day:int?}")]
         [Authorize/*(AuthenticationSchemes="Bearer")*/]
-        public async Task<IActionResult> Get(int year, int month, int day)
+        public async Task<IActionResult> Get(int year, int month, int? day)
         {
             var username = User.Identity.Name;
 
-            try
+            SetDateParameter(year, month, day, out var dateBegin, out var dateEnd);
+
+            var workScheduleList = _dbContext.WorkSchedules
+                .Where(i => (dateBegin <= i.Date && i.Date < dateEnd) && i.User == username);
+
+            var items = new List<WorkScheduleItem>();
+            foreach (var workSchedule in workScheduleList)
             {
-                DateTime date = new DateTime(year, month, day);
-                var workSchedule = _dbContext.WorkSchedules
-                    .FirstOrDefault<WorkSchedule>(i => i.Date == date && i.User == username);
-                if (workSchedule == null)
-                {
-                    return BadRequest($"[{date}] No schedule. It is empty.");
-                }
-
-                WorkScheduleItem item = new WorkScheduleItem()
-                {
-                    Date = workSchedule.Date,
-                    StartTime = workSchedule.StartTime,
-                    EndTime = workSchedule.EndTime,
-                    WorkStyle = workSchedule.WorkStyle,
-                    WorkingPlace = workSchedule.WorkingPlace
-                };
-
-                return Ok(item);
+                items.Add(
+                    new WorkScheduleItem()
+                    {
+                        Date = workSchedule.Date,
+                        StartTime = workSchedule.StartTime,
+                        EndTime = workSchedule.EndTime,
+                        WorkStyle = workSchedule.WorkStyle,
+                        WorkingPlace = workSchedule.WorkingPlace
+                    }
+                );
             }
-            catch (Exception ex)
-            {
-                return BadRequest($"Invalid request.");
-            }
-        }
+            return Ok(items);
 
-        // GET <host>/api/WorkSchedule/<year>/<month>
-        // ex. http://127.0.0.1:5000/api/WorkSchedule/2023/1
-        // [Request]
-        // Header {
-        //   Content-Type: application/json
-        // }
-        // [Response]
-        // Body {
-        //  [
-        //    {
-        //    "Date"        : "2023-01-30",
-        //    "StartTime"   : "2023-01-30T08:40",
-        //    "EndTime"     : "2023-01-30T17:40",
-        //    "WorkStyle"   : "出社",　// 出張,テレワーク,有休
-        //    "WorkingPlace"   : "阿久比"　// 刈谷,自宅,その他
-        //    },
-        //    {
-        //    "Date"        : "2023-01-31",
-        //    "StartTime"   : "2023-01-31T08:40",
-        //    "EndTime"     : "2023-01-31T17:40",
-        //    "WorkStyle"   : "出社",　// 出張,テレワーク,有休
-        //    "WorkingPlace"   : "阿久比"　// 刈谷,自宅,その他
-        //    },
-        //      :
-        //  ]
-        // }
-        [HttpGet("{year:int}/{month:int}")]
-        [Authorize/*(AuthenticationSchemes="Bearer")*/]
-        public async Task<IActionResult> Get(int year, int month)
-        {
-            var username = User.Identity.Name;
-
-            try
+            static void SetDateParameter(int year, int month, int? day, out DateTime dateBegin, out DateTime dateEnd)
             {
-                DateTime dateBegin = new DateTime(year, month, 1);
-                DateTime dateEnd = dateBegin.AddMonths(1); // 翌月1日
-                var workScheduleList = _dbContext.WorkSchedules
-                    .Where(i => (dateBegin <= i.Date && i.Date < dateEnd) && i.User == username);
-                if (workScheduleList == null || workScheduleList.Count() <= 0)
+                if (day.HasValue)
                 {
-                    return BadRequest($"[{dateBegin.Year}/{dateBegin.Month}] No schedule. It is empty.");
+                    dateBegin = new DateTime(year, month, day.Value);
+                    dateEnd = dateBegin.AddDays(1);
                 }
-
-                var items = new List<WorkScheduleItem>();
-                foreach (var workSchedule in workScheduleList)
+                else
                 {
-                    items.Add(
-                        new WorkScheduleItem()
-                        {
-                            Date = workSchedule.Date,
-                            StartTime = workSchedule.StartTime,
-                            EndTime = workSchedule.EndTime,
-                            WorkStyle = workSchedule.WorkStyle,
-                            WorkingPlace = workSchedule.WorkingPlace
-                        }
-                    );
+                    dateBegin = new DateTime(year, month, 1);
+                    dateEnd = dateBegin.AddMonths(1);
                 }
-
-                return Ok(items);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Invalid request.");
             }
         }
 
