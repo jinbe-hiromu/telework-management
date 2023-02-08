@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WorkScheduleServer.Data;
@@ -37,7 +38,7 @@ namespace WorkScheduleServer.Controllers
         //    "WorkingPlace"   : "阿久比"　// 刈谷,自宅,その他
         // }
         [HttpGet("{year:int}/{month:int}/{day:int}")]
-        [Authorize]
+        [Authorize/*(AuthenticationSchemes="Bearer")*/]
         public async Task<IActionResult> Get(int year, int month, int day)
         {
             var username = User.Identity.Name;
@@ -96,7 +97,7 @@ namespace WorkScheduleServer.Controllers
         //  ]
         // }
         [HttpGet("{year:int}/{month:int}")]
-        [Authorize]
+        [Authorize/*(AuthenticationSchemes="Bearer")*/]
         public async Task<IActionResult> Get(int year, int month)
         {
             var username = User.Identity.Name;
@@ -148,7 +149,7 @@ namespace WorkScheduleServer.Controllers
         //    "WorkingPlace"   : "阿久比"　// 刈谷,自宅,その他
         // }
         [HttpPost("{year:int}/{month:int}/{day:int}")]
-        [Authorize]
+        [Authorize/*(AuthenticationSchemes="Bearer")*/]
         public async Task<IActionResult> Post(int year, int month, int day, [FromBody] WorkScheduleItem workScheduleItem)
         {
             var username = User.Identity.Name;
@@ -212,7 +213,7 @@ namespace WorkScheduleServer.Controllers
         //    "WorkingPlace"   : "阿久比"　// 刈谷,自宅,その他
         // }
         [HttpPut("{year:int}/{month:int}/{day:int}")]
-        [Authorize]
+        [Authorize/*(AuthenticationSchemes="Bearer")*/]
         public async Task<IActionResult> Put(int year, int month, int day, [FromBody] WorkScheduleItem workScheduleItem)
         {
             return await Post(year, month, day, workScheduleItem);
@@ -224,7 +225,7 @@ namespace WorkScheduleServer.Controllers
         //   Content-Type: application/json
         // }
         [HttpDelete("{year:int}/{month:int}/{day:int}")]
-        [Authorize]
+        [Authorize/*(AuthenticationSchemes="Bearer")*/]
         public async Task<IActionResult> Delete(int year, int month, int day)
         {
             var username = User.Identity.Name;
