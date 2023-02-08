@@ -21,12 +21,6 @@ namespace WorkScheduler.ViewModels
         {
             TappedCommand = new Command<SchedulerTappedEventArgs>(OnSchedulerTapped);
             OnViewChangedCommand = new Command<SchedulerViewChangedEventArgs>(OnVeiwChangedAsync);
-            SchedulerEvents.Add(new SchedulerAppointment
-            {
-                StartTime = DateTime.Now,
-                EndTime = DateTime.Now.AddHours(1),
-                Subject = "test"
-            });
 
             var cookie = cookies.GetCookies(new Uri("https://localhost")).First();
             _client.AddCookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain);
@@ -83,12 +77,26 @@ namespace WorkScheduler.ViewModels
 
                 foreach (var schedule in schedules)
                 {
-                    SchedulerEvents.Add(new SchedulerAppointment
+                    if (schedule.ScheduleType == ScheduleType.Schedule)
                     {
-                        StartTime = schedule.StartTime,
-                        EndTime = schedule.EndTime,
-                        Subject = CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
-                    });
+                        SchedulerEvents.Add(new SchedulerAppointment
+                        {
+                            StartTime = schedule.StartTime,
+                            EndTime = schedule.EndTime,
+                            Subject = CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
+                            Background = new SolidColorBrush(Colors.LightBlue)
+                        });
+                    }
+                    else
+                    {
+                        SchedulerEvents.Add(new SchedulerAppointment
+                        {
+                            StartTime = schedule.StartTime,
+                            EndTime = schedule.EndTime,
+                            Subject = CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
+                            Background = new SolidColorBrush(Colors.LightGoldenrodYellow)
+                        });
+                    }
                 }
             }
         }
