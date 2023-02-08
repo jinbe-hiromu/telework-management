@@ -93,7 +93,7 @@ namespace WorkScheduleServer.Controllers
         //    "WorkingPlace"   : "阿久比"　// 刈谷,自宅,その他
         // }
         [HttpPost("{year:int}/{month:int}/{day:int}")]
-        [Authorize]
+        [Authorize/*(AuthenticationSchemes="Bearer")*/]
         public async Task<IActionResult> Post(int year, int month, int day, [FromBody] WorkScheduleItem workScheduleItem)
         {
             var username = User.Identity.Name;
@@ -157,7 +157,7 @@ namespace WorkScheduleServer.Controllers
         //    "WorkingPlace"   : "阿久比"　// 刈谷,自宅,その他
         // }
         [HttpPut("{year:int}/{month:int}/{day:int}")]
-        [Authorize]
+        [Authorize/*(AuthenticationSchemes="Bearer")*/]
         public async Task<IActionResult> Put(int year, int month, int day, [FromBody] WorkScheduleItem workScheduleItem)
         {
             return await Post(year, month, day, workScheduleItem);
@@ -169,7 +169,7 @@ namespace WorkScheduleServer.Controllers
         //   Content-Type: application/json
         // }
         [HttpDelete("{year:int}/{month:int}/{day:int}")]
-        [Authorize]
+        [Authorize/*(AuthenticationSchemes="Bearer")*/]
         public async Task<IActionResult> Delete(int year, int month, int day)
         {
             var username = User.Identity.Name;
