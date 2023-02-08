@@ -110,8 +110,6 @@ namespace WorkScheduleServer.Controllers
 						AccessToken = await CreateJWT(user)
 					};
 
-					// TODO: Microsoft.AspNetCore.Identityに対してTokenを登録する方法が不明;
-
 					return Ok(response);
 				}
 				else
@@ -135,15 +133,14 @@ namespace WorkScheduleServer.Controllers
 		/// <param name="request"></param>
 		/// <returns></returns>
 		[HttpPost("token/release")]
-		[Authorize]
-		public async Task<IActionResult> ReleaseToken([FromHeader] string authorization)
+        [Authorize/*(AuthenticationSchemes="Bearer")*/]
+        public async Task<IActionResult> ReleaseToken([FromHeader] string authorization)
 		{
 			var username = User.Identity.Name;
 
 			await signInManager.SignOutAsync();
 			// NOTE:Cookie認証として整合はとれている
 
-			// TODO: Microsoft.AspNetCore.Identityに対して登録したTokenを破棄する方法が不明;
 			// ※：Authorization: Bearer <AccessToken> は使用されていない。Cookie認証で整合はとれていいる。無くても動作する。
 
 			return Ok();
