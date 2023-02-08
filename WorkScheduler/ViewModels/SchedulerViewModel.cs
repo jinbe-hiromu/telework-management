@@ -13,7 +13,7 @@ namespace WorkScheduler.ViewModels
 {
     public partial class SchedulerViewModel : ObservableObject
     {
-        private RestClient _client = new RestClient("http://localhost:5000");
+        private RestClient _client = new RestClient("https://localhost:5001");
         private IList<DateTime> _visibleDates;
         private SchedulerAppointment _selectedAppointment;
 
@@ -28,7 +28,7 @@ namespace WorkScheduler.ViewModels
                 Subject = "test"
             });
 
-            var cookie = cookies.GetCookies(new Uri("http://localhost")).First();
+            var cookie = cookies.GetCookies(new Uri("https://localhost")).First();
             _client.AddCookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain);
         }
 
