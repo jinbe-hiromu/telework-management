@@ -23,6 +23,7 @@
         <scheduler:SfScheduler View="Week"
                                AllowedViews="Day,WorkWeek,Month"
                                AppointmentsSource="{Binding SchedulerEvents}"
+                               SelectedAppointmentBackground="Orange"
                                Grid.Row="0">
             <!--ViewChanged="OnViewChanged">-->
 
