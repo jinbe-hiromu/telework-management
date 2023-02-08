@@ -8,12 +8,6 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="SchedulerView">
 
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <toolkit:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -23,9 +17,12 @@
         <scheduler:SfScheduler View="Week"
                                AllowedViews="Day,WorkWeek,Month"
                                AppointmentsSource="{Binding SchedulerEvents}"
-                               SelectedAppointmentBackground="Orange"
+                               SelectedAppointmentBackground="Red"
                                Grid.Row="0">
-            <!--ViewChanged="OnViewChanged">-->
+
+            <scheduler:SfScheduler.DaysView>
+                <scheduler:SchedulerDaysView StartHour="6" EndHour="24" TimeFormat="HH"/>
+            </scheduler:SfScheduler.DaysView>
 
             <scheduler:SfScheduler.Behaviors>
                 <toolkit:EventToCommandBehavior EventName="ViewChanged" x:TypeArguments="scheduler:SchedulerViewChangedEventArgs" Command="{Binding OnViewChangedCommand}" />
@@ -39,7 +36,5 @@
             <Button Text="削除" Command="{Binding DeleteScheduleCommand}"/>
         </HorizontalStackLayout>
     </Grid>
-
-
 
 </ContentPage>

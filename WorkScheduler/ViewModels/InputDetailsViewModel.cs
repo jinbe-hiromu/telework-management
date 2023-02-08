@@ -1,9 +1,11 @@
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using WorkScheduler.Models;
 
 namespace WorkScheduler.ViewModels;
 
-public class InputDetailsViewModel : BindableObject
+public partial class InputDetailsViewModel : ObservableObject
 {
     private static readonly string _workStyleGoingToWork = "èoé–";
     private static readonly string _workStyleBusinessTrip = "èoí£";
@@ -30,8 +32,39 @@ public class InputDetailsViewModel : BindableObject
     public event Action<object> CloseRequested;
     public Size Size { get; } = new Size(500, 400);
     public DateTime Date { get; set; }
-    public TimeSpan StartTime { get; set; }
-    public TimeSpan EndTime { get; set; }
+
+    private TimeSpan _startTime;
+    public TimeSpan StartTime
+    {
+        get => _startTime;
+        set
+        {
+            _startTime = value;
+            CheckSettingTime();
+        }
+    }
+
+    private TimeSpan _endTime;
+    public TimeSpan EndTime
+    {
+        get => _endTime;
+        set
+        {
+            _endTime = value;
+            CheckSettingTime();
+        }
+    }
+
+    private void CheckSettingTime()
+    {
+        if (StartTime < EndTime)
+        {
+            EnableOkCommand = true;
+            return;
+        }
+        EnableOkCommand = false;
+    }
+
     public ObservableCollection<string> WorkStyles { get; } = new();
     private string _selectedWorkStyle;
     public string SelectedWorkStyle
@@ -43,6 +76,8 @@ public class InputDetailsViewModel : BindableObject
             OnSelectedWorkStyleChanged(value);
         }
     }
+    [ObservableProperty]
+    private bool enableOkCommand;
 
     public ObservableCollection<string> WorkingPlaces { get; } = new();
     private string _selectedWorkingPlace;
