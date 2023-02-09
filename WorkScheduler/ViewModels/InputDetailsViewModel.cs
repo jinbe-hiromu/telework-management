@@ -1,6 +1,7 @@
-using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
+using System.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using WorkScheduler.Models;
 
 namespace WorkScheduler.ViewModels;
@@ -30,71 +31,29 @@ public partial class InputDetailsViewModel : ObservableObject
     };
 
     public event Action<object> CloseRequested;
+    public ObservableCollection<string> WorkStyles { get; } = new();
+    public ObservableCollection<string> WorkingPlaces { get; } = new();
     public Size Size { get; } = new Size(500, 400);
     public DateTime Date { get; set; }
 
-    private TimeSpan _startTime;
-    public TimeSpan StartTime
-    {
-        get => _startTime;
-        set
-        {
-            _startTime = value;
-            CheckSettingTime();
-        }
-    }
+    public bool IsOkEnabled => StartTime < EndTime;
 
-    private TimeSpan _endTime;
-    public TimeSpan EndTime
-    {
-        get => _endTime;
-        set
-        {
-            _endTime = value;
-            CheckSettingTime();
-        }
-    }
-
-    private void CheckSettingTime()
-    {
-        if (StartTime < EndTime)
-        {
-            EnableOkCommand = true;
-            return;
-        }
-        EnableOkCommand = false;
-    }
-
-    public ObservableCollection<string> WorkStyles { get; } = new();
-    private string _selectedWorkStyle;
-    public string SelectedWorkStyle
-    {
-        get => _selectedWorkStyle;
-        set
-        {
-            _selectedWorkStyle = value;
-            OnSelectedWorkStyleChanged(value);
-        }
-    }
     [ObservableProperty]
-    private bool enableOkCommand;
+    [NotifyPropertyChangedFor(nameof(IsOkEnabled))]
+    private TimeSpan _startTime;
 
-    public ObservableCollection<string> WorkingPlaces { get; } = new();
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsOkEnabled))]
+    private TimeSpan _endTime;
+
+    [ObservableProperty]
+    private string _selectedWorkStyle;
+
+    [ObservableProperty]
     private string _selectedWorkingPlace;
-    public string SelectedWorkingPlace
-    {
-        get => _selectedWorkingPlace;
-        set
-        {
-            _selectedWorkingPlace = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public Command CancelCommand { get; }
-    public Command OkCommand { get; }
 
     public InputDetailsViewModel() : this(DefaultContact) { }
+
     public InputDetailsViewModel(InputDetailsContact contact)
     {
         Date = contact.Date;
@@ -104,30 +63,10 @@ public partial class InputDetailsViewModel : ObservableObject
         WorkStyles.Add(_workStyleBusinessTrip);
         WorkStyles.Add(_workStyleTelework);
         SelectedWorkStyle = contact.WorkStyle;
-        CancelCommand = new(OnCancelClicked);
-        OkCommand = new(OnOkClicked);
     }
 
-    private void OnSelectedWorkStyleChanged(string changed)
-    {
-        if (changed != null)
-        {
-            WorkingPlaces.Clear();
-            foreach (var item in _workingPlaceSet.TryGetValue(changed, out var items) ? items : Array.Empty<string>())
-            {
-                WorkingPlaces.Add(item);
-            }
-
-            SelectedWorkingPlace = WorkingPlaces.First();
-        }
-    }
-
-    private void OnCancelClicked()
-    {
-        CloseRequested.Invoke(new());
-    }
-
-    private void OnOkClicked()
+    [RelayCommand]
+    private void Ok()
     {
         CloseRequested.Invoke(new InputDetailsContact
         {
@@ -137,5 +76,26 @@ public partial class InputDetailsViewModel : ObservableObject
             WorkStyle = SelectedWorkStyle,
             WorkingPlace = SelectedWorkingPlace,
         });
+    }
+
+    [RelayCommand]
+    private void Cancel()
+    {
+        CloseRequested.Invoke(new());
+    }
+
+    partial void OnSelectedWorkStyleChanged(string value)
+    {
+        Debug.WriteLine(value);
+        if (value != null)
+        {
+            WorkingPlaces.Clear();
+            foreach (var item in _workingPlaceSet.TryGetValue(value, out var items) ? items : Array.Empty<string>())
+            {
+                WorkingPlaces.Add(item);
+            }
+
+            SelectedWorkingPlace = WorkingPlaces.First();
+        }
     }
 }
