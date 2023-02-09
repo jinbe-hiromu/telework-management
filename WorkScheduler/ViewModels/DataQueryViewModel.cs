@@ -25,12 +25,9 @@ internal static class CookieContainerExtensions
 {
     internal static CookieContainer Copy(this CookieContainer source)
     {
-        var destination = new CookieContainer()
-        {
-            Capacity = source.Capacity,
-            PerDomainCapacity = source.PerDomainCapacity,
-            MaxCookieSize = source.MaxCookieSize,
-        };
+        var destination = new CookieContainer(source.Capacity,
+                                              source.PerDomainCapacity,
+                                              source.MaxCookieSize);
 
         var cookies = source.GetAllCookies();
         destination.Add(cookies);
