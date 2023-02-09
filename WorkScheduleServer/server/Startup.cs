@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System;
+using System.Net.Http;
+using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -12,11 +12,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Radzen;
-using System;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.IdentityModel.Tokens.Jwt;
 using WorkScheduleServer.Authentication;
 using WorkScheduleServer.Data;
 using WorkScheduleServer.Models;
@@ -44,12 +39,12 @@ namespace WorkScheduleServer
             services.AddScoped<HttpClient>(serviceProvider =>
             {
 
-              var uriHelper = serviceProvider.GetRequiredService<NavigationManager>();
+                var uriHelper = serviceProvider.GetRequiredService<NavigationManager>();
 
-              return new HttpClient
-              {
-                BaseAddress = new Uri(uriHelper.BaseUri)
-              };
+                return new HttpClient
+                {
+                    BaseAddress = new Uri(uriHelper.BaseUri)
+                };
             });
 
             services.AddHttpClient();
@@ -129,9 +124,9 @@ namespace WorkScheduleServer
 
             services.AddDbContext<WorkScheduleServer.Data.WorkScheduleDbContext>(options =>
             {
-              options.UseSqlite(
-                  Environment.ExpandEnvironmentVariables(
-                      Configuration.GetConnectionString("WorkScheduleDBConnection")));
+                options.UseSqlite(
+                    Environment.ExpandEnvironmentVariables(
+                        Configuration.GetConnectionString("WorkScheduleDBConnection")));
             });
 
             services.AddControllersWithViews();
@@ -168,7 +163,7 @@ namespace WorkScheduleServer
                 //    return next();
                 //});
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();

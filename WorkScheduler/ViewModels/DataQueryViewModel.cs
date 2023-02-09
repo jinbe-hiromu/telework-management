@@ -16,7 +16,7 @@ public partial class DataQueryViewModel : ObservableObject
         _cookies = cookies.Copy();
         _source = new UrlWebViewSource
         {
-            Url = "https://localhost:5001/work-schedule-view"
+            Url = "http://localhost:5000/work-schedule-view"
         };
     }
 }

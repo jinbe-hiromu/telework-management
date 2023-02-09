@@ -22,7 +22,7 @@ namespace WorkScheduler.ViewModels
         public LoginViewModel(INavigationService navigation, CookieContainer cookies)
         {
             _navigation = navigation;
-            _client = new RestClient("https://localhost:5001");
+            _client = new RestClient("http://localhost:5000");
             _cookies = cookies;
         }
 
@@ -39,7 +39,7 @@ namespace WorkScheduler.ViewModels
 
                 if (response.StatusCode == HttpStatusCode.OK && response.Cookies.Count > 0)
                 {
-                    _cookies.Add(new Uri("https://localhost"), response.Cookies);
+                    _cookies.Add(new Uri("http://localhost"), response.Cookies);
                     await _navigation.NavigateToMain();
                 }
                 else
