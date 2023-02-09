@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="WorkScheduler.Views.SchedulerView"
-             xmlns:scheduler="clr-namespace:Syncfusion.Maui.Scheduler;assembly=Syncfusion.Maui.Scheduler"
-             xmlns:local="clr-namespace:WorkScheduler.Views"
-             xmlns:vm="clr-namespace:WorkScheduler.ViewModels"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             Title="SchedulerView">
+<ContentPage
+    x:Class="WorkScheduler.Views.SchedulerView"
+    x:DataType="vm:SchedulerViewModel"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:WorkScheduler.Views"
+    xmlns:scheduler="clr-namespace:Syncfusion.Maui.Scheduler;assembly=Syncfusion.Maui.Scheduler"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:vm="clr-namespace:WorkScheduler.ViewModels"
+    Title="SchedulerView">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -25,15 +27,15 @@
             </scheduler:SfScheduler.DaysView>
 
             <scheduler:SfScheduler.Behaviors>
-                <toolkit:EventToCommandBehavior EventName="ViewChanged" x:TypeArguments="scheduler:SchedulerViewChangedEventArgs" Command="{Binding OnViewChangedCommand}" />
+                <toolkit:EventToCommandBehavior EventName="ViewChanged" x:TypeArguments="scheduler:SchedulerViewChangedEventArgs" Command="{Binding ViewChangedCommand}" />
                 <toolkit:EventToCommandBehavior EventName="Tapped" x:TypeArguments="scheduler:SchedulerTappedEventArgs" Command="{Binding TappedCommand}" />
             </scheduler:SfScheduler.Behaviors>
         </scheduler:SfScheduler>
 
         <HorizontalStackLayout Spacing="20" Grid.Row="1" VerticalOptions="Center" HorizontalOptions="End" Margin="5">
             <Button Text="新規" Command="{Binding ShowInputDetailsCommand}"/>
-            <Button Text="編集" Command="{Binding EditScheduleCommand}"/>
-            <Button Text="削除" Command="{Binding DeleteScheduleCommand}"/>
+            <Button Text="編集" Command="{Binding EditScheduleCommand}" />
+            <Button Text="削除" Command="{Binding DeleteScheduleCommand}" />
         </HorizontalStackLayout>
     </Grid>
 
