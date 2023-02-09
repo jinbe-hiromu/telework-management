@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Net;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -139,22 +140,31 @@ namespace WorkScheduler.ViewModels
         [RelayCommand]
         private async void EditSchedule()
         {
-            var info = DivideSubject(_selectedAppointment.Subject);
-            //var view = new InputDetails();
-            var arg = new InputDetailsContact
+            if (_selectedAppointment is not null)
             {
-                Date = _selectedAppointment.StartTime,
-                StartTime = new TimeSpan(_selectedAppointment.StartTime.Hour, _selectedAppointment.StartTime.Minute, _selectedAppointment.StartTime.Second),
-                EndTime = new TimeSpan(_selectedAppointment.EndTime.Hour, _selectedAppointment.EndTime.Minute, _selectedAppointment.EndTime.Second),
-                WorkStyle = info.WorkStyle,
-                WorkingPlace = info.WorkingPlace
-            };
+                var info = DivideSubject(_selectedAppointment.Subject);
+                //var view = new InputDetails();
+                var arg = new InputDetailsContact
+                {
+                    Date = _selectedAppointment.StartTime,
+                    StartTime = new TimeSpan(_selectedAppointment.StartTime.Hour, _selectedAppointment.StartTime.Minute, _selectedAppointment.StartTime.Second),
+                    EndTime = new TimeSpan(_selectedAppointment.EndTime.Hour, _selectedAppointment.EndTime.Minute, _selectedAppointment.EndTime.Second),
+                    WorkStyle = info.WorkStyle,
+                    WorkingPlace = info.WorkingPlace
+                };
 
-            var result = await Shell.Current.ShowPopupAsync(new InputDetails(arg));
-            if (result is InputDetailsContact output)
-            {
-                await AddEvent(output);
+                var result = await Shell.Current.ShowPopupAsync(new InputDetails(arg));
+                if (result is InputDetailsContact output)
+                {
+                    await AddEvent(output);
+                }
             }
+            else
+            {
+                var toast = Toast.Make("予定を選択してください", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
+                await toast.Show().ConfigureAwait(false);
+            }
+
         }
 
 
