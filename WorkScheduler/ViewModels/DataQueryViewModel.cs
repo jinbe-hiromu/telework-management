@@ -7,15 +7,34 @@ public partial class DataQueryViewModel : ObservableObject
 {
     [ObservableProperty]
     private CookieContainer _cookies;
+
     [ObservableProperty]
     private UrlWebViewSource _source;
 
     public DataQueryViewModel(CookieContainer cookies)
     {
-        _cookies = cookies;
+        _cookies = cookies.Copy();
         _source = new UrlWebViewSource
         {
-            Url = $"http://localhost:5000/api/WorkSchedule/2023/2/3?accesskey={cookies.GetCookieHeader(new Uri("https://localhost:5001"))}"
+            Url = "https://localhost:5001/work-schedule-view"
         };
+    }
+}
+
+internal static class CookieContainerExtensions
+{
+    internal static CookieContainer Copy(this CookieContainer source)
+    {
+        var destination = new CookieContainer()
+        {
+            Capacity = source.Capacity,
+            PerDomainCapacity = source.PerDomainCapacity,
+            MaxCookieSize = source.MaxCookieSize,
+        };
+
+        var cookies = source.GetAllCookies();
+        destination.Add(cookies);
+
+        return destination;
     }
 }
