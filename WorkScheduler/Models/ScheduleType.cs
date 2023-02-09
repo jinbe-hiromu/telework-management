@@ -2,7 +2,7 @@
 {
     public enum ScheduleType
     {
-        Schedule,
-        Achievement
+        Plan,
+        Actual
     }
 }

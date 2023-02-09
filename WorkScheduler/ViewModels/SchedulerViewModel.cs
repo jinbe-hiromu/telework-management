@@ -77,7 +77,7 @@ namespace WorkScheduler.ViewModels
 
                 foreach (var schedule in schedules)
                 {
-                    if (schedule.ScheduleType == ScheduleType.Schedule)
+                    if (schedule.ScheduleType == ScheduleType.Plan)
                     {
                         SchedulerEvents.Add(new SchedulerAppointment
                         {
