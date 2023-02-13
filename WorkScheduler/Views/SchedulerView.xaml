@@ -29,6 +29,7 @@
             <scheduler:SfScheduler.Behaviors>
                 <toolkit:EventToCommandBehavior EventName="ViewChanged" x:TypeArguments="scheduler:SchedulerViewChangedEventArgs" Command="{Binding ViewChangedCommand}" />
                 <toolkit:EventToCommandBehavior EventName="Tapped" x:TypeArguments="scheduler:SchedulerTappedEventArgs" Command="{Binding TappedCommand}" />
+                <toolkit:EventToCommandBehavior EventName="DoubleTapped" x:TypeArguments="scheduler:SchedulerDoubleTappedEventArgs" Command="{Binding DoubleTappedCommand}" />
             </scheduler:SfScheduler.Behaviors>
         </scheduler:SfScheduler>
 

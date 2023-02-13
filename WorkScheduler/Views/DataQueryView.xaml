@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="WorkScheduler.Views.DataQueryView"
+    x:DataType="vm:DataQueryViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:control="clr-namespace:WorkScheduler.Views.Controls"
     xmlns:vm="clr-namespace:WorkScheduler.ViewModels"
     Title="WebViewContentPage">
 
-    <WebView Cookies="{Binding Cookies, Mode=OneWay}" Source="{Binding Source, Mode=OneWay}" />
+    <control:WebViewWithCookie Cookie="{Binding Cookie, Mode=OneWay}" Url="{Binding Url, Mode=OneWay}" />
 
 </ContentPage>

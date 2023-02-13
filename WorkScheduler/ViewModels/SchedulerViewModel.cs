@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Net;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -13,7 +14,7 @@ namespace WorkScheduler.ViewModels
 {
     public partial class SchedulerViewModel : ObservableObject
     {
-        private RestClient _client = new RestClient("https://localhost:5001");
+        private RestClient _client = new RestClient("http://localhost:5000");
         private IList<DateTime> _visibleDates;
 
         [ObservableProperty]
@@ -35,6 +36,16 @@ namespace WorkScheduler.ViewModels
         private void Tapped(SchedulerTappedEventArgs e)
         {
             SelectedAppointment = e?.Appointments is not null ? (SchedulerAppointment)e.Appointments.First() : null;
+        }
+
+        [RelayCommand]
+        private void DoubleTapped(SchedulerDoubleTappedEventArgs e)
+        {
+            SelectedAppointment = e?.Appointments is not null ? (SchedulerAppointment)e.Appointments.First() : null;
+            if (SelectedAppointment is not null)
+            {
+                EditSchedule();
+            }
         }
 
         [RelayCommand]
