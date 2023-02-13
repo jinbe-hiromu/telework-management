@@ -21,6 +21,7 @@ namespace WorkScheduler.ViewModels
         public SchedulerViewModel(CookieContainer cookies)
         {
             TappedCommand = new Command<SchedulerTappedEventArgs>(OnSchedulerTapped);
+            DoubleTappedCommand = new Command<SchedulerDoubleTappedEventArgs>(OnSchedulerDoubleTapped);
             OnViewChangedCommand = new Command<SchedulerViewChangedEventArgs>(OnVeiwChangedAsync);
 
             var cookie = cookies.GetCookies(new Uri("http://localhost")).First();
@@ -33,6 +34,14 @@ namespace WorkScheduler.ViewModels
         {
             get { return _tappedCommand; }
             set { _tappedCommand = value; }
+        }
+
+        private Command<SchedulerDoubleTappedEventArgs> _doubleTappedCommand;
+
+        public Command<SchedulerDoubleTappedEventArgs> DoubleTappedCommand
+        {
+            get { return _doubleTappedCommand; }
+            set { _doubleTappedCommand = value; }
         }
 
         private Command<SchedulerViewChangedEventArgs> _onViewChangedCommand;
@@ -55,6 +64,11 @@ namespace WorkScheduler.ViewModels
             {
                 _selectedAppointment = null;
             }
+        }
+
+        private void OnSchedulerDoubleTapped(SchedulerDoubleTappedEventArgs e)
+        {
+            EditSchedule();
         }
 
         private async void OnVeiwChangedAsync(SchedulerViewChangedEventArgs e)
