@@ -16,68 +16,83 @@ namespace WorkScheduler.ViewModels
     {
         private RestClient _client = new RestClient("http://localhost:5000");
         private IList<DateTime> _visibleDates;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(EditScheduleCommand))]
+        [NotifyCanExecuteChangedFor(nameof(DeleteScheduleCommand))]
         private SchedulerAppointment _selectedAppointment;
-
-        public SchedulerViewModel(CookieContainer cookies)
-        {
-            TappedCommand = new Command<SchedulerTappedEventArgs>(OnSchedulerTapped);
-            DoubleTappedCommand = new Command<SchedulerDoubleTappedEventArgs>(OnSchedulerDoubleTapped);
-            OnViewChangedCommand = new Command<SchedulerViewChangedEventArgs>(OnVeiwChangedAsync);
-
-            var cookie = cookies.GetCookies(new Uri("http://localhost")).First();
-            _client.AddCookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain);
-        }
-
-        private Command<SchedulerTappedEventArgs> _tappedCommand;
-
-        public Command<SchedulerTappedEventArgs> TappedCommand
-        {
-            get { return _tappedCommand; }
-            set { _tappedCommand = value; }
-        }
-
-        private Command<SchedulerDoubleTappedEventArgs> _doubleTappedCommand;
-
-        public Command<SchedulerDoubleTappedEventArgs> DoubleTappedCommand
-        {
-            get { return _doubleTappedCommand; }
-            set { _doubleTappedCommand = value; }
-        }
-
-        private Command<SchedulerViewChangedEventArgs> _onViewChangedCommand;
-
-        public Command<SchedulerViewChangedEventArgs> OnViewChangedCommand
-        {
-            get { return _onViewChangedCommand; }
-            set { _onViewChangedCommand = value; }
-        }
 
         public ObservableCollection<SchedulerAppointment> SchedulerEvents { get; set; } = new ObservableCollection<SchedulerAppointment>();
 
-        private void OnSchedulerTapped(SchedulerTappedEventArgs e)
+        public bool IsSelected => SelectedAppointment is not null;
+
+        public SchedulerViewModel(CookieContainer cookies)
         {
-            if (e is not null && e.Appointments is not null)
+            var cookie = cookies.GetCookies(new Uri("https://localhost")).First();
+            _client.AddCookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain);
+        }
+
+        [RelayCommand]
+        private void Tapped(SchedulerTappedEventArgs e)
+        {
+            SelectedAppointment = e?.Appointments is not null ? (SchedulerAppointment)e.Appointments.First() : null;
+        }
+
+        [RelayCommand]
+        private void DoubleTapped(SchedulerDoubleTappedEventArgs e)
+        {
+            SelectedAppointment = e?.Appointments is not null ? (SchedulerAppointment)e.Appointments.First() : null;
+            if (SelectedAppointment is not null)
             {
-                _selectedAppointment = (SchedulerAppointment)e.Appointments.First();
-            }
-            else
-            {
-                _selectedAppointment = null;
+                EditSchedule();
             }
         }
 
-        private void OnSchedulerDoubleTapped(SchedulerDoubleTappedEventArgs e)
+        [RelayCommand]
+        private async void ViewChanged(SchedulerViewChangedEventArgs e)
         {
-            EditSchedule();
+            _visibleDates = e.NewVisibleDates;
+            await UpdateScheduler(e.NewVisibleDates);
         }
 
-        private async void OnVeiwChangedAsync(SchedulerViewChangedEventArgs e)
+        [RelayCommand]
+        private async void ShowInputDetails()
         {
-            if (e is not null)
+            var result = await Shell.Current.ShowPopupAsync(new InputDetails());
+            if (result is InputDetailsContact output)
             {
-                _visibleDates = e.NewVisibleDates;
-                await UpdateScheduler(e.NewVisibleDates);
+                await AddEvent(output);
             }
+        }
+
+        [RelayCommand(CanExecute = nameof(IsSelected))]
+        private async void EditSchedule()
+        {
+            var info = SchedulerViewModel.SplitSubject(SelectedAppointment.Subject);
+            //var view = new InputDetails();
+            var arg = new InputDetailsContact
+            {
+                Date = SelectedAppointment.StartTime,
+                StartTime = new TimeSpan(SelectedAppointment.StartTime.Hour, SelectedAppointment.StartTime.Minute, SelectedAppointment.StartTime.Second),
+                EndTime = new TimeSpan(SelectedAppointment.EndTime.Hour, SelectedAppointment.EndTime.Minute, SelectedAppointment.EndTime.Second),
+                WorkStyle = info.WorkStyle,
+                WorkingPlace = info.WorkingPlace
+            };
+
+            var result = await Shell.Current.ShowPopupAsync(new InputDetails(arg));
+            if (result is InputDetailsContact output)
+            {
+                await AddEvent(output);
+            }
+        }
+
+        [RelayCommand(CanExecute = nameof(IsSelected))]
+        private async void DeleteSchedule()
+        {
+            var request = new RestRequest($"/api/workschedule/{SelectedAppointment.StartTime.Year}/{SelectedAppointment.StartTime.Month}/{SelectedAppointment.StartTime.Day}");
+
+            await _client.DeleteAsync(request);
+            await UpdateScheduler(_visibleDates);
         }
 
         private async Task UpdateScheduler(IList<DateTime> targetDates)
@@ -98,7 +113,7 @@ namespace WorkScheduler.ViewModels
                         {
                             StartTime = schedule.StartTime,
                             EndTime = schedule.EndTime,
-                            Subject = CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
+                            Subject = SchedulerViewModel.CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
                             Background = new SolidColorBrush(Colors.LightBlue)
                         });
                     }
@@ -108,21 +123,11 @@ namespace WorkScheduler.ViewModels
                         {
                             StartTime = schedule.StartTime,
                             EndTime = schedule.EndTime,
-                            Subject = CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
+                            Subject = SchedulerViewModel.CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
                             Background = new SolidColorBrush(Colors.LightGoldenrodYellow)
                         });
                     }
                 }
-            }
-        }
-
-        [RelayCommand]
-        private async void ShowInputDetails()
-        {
-            var result = await Shell.Current.ShowPopupAsync(new InputDetails());
-            if (result is InputDetailsContact output)
-            {
-                await AddEvent(output);
             }
         }
 
@@ -151,50 +156,7 @@ namespace WorkScheduler.ViewModels
             }
         }
 
-        [RelayCommand]
-        private async void EditSchedule()
-        {
-            if (_selectedAppointment is not null)
-            {
-                var info = DivideSubject(_selectedAppointment.Subject);
-                //var view = new InputDetails();
-                var arg = new InputDetailsContact
-                {
-                    Date = _selectedAppointment.StartTime,
-                    StartTime = new TimeSpan(_selectedAppointment.StartTime.Hour, _selectedAppointment.StartTime.Minute, _selectedAppointment.StartTime.Second),
-                    EndTime = new TimeSpan(_selectedAppointment.EndTime.Hour, _selectedAppointment.EndTime.Minute, _selectedAppointment.EndTime.Second),
-                    WorkStyle = info.WorkStyle,
-                    WorkingPlace = info.WorkingPlace
-                };
-
-                var result = await Shell.Current.ShowPopupAsync(new InputDetails(arg));
-                if (result is InputDetailsContact output)
-                {
-                    await AddEvent(output);
-                }
-            }
-            else
-            {
-                var toast = Toast.Make("予定を選択してください", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
-                await toast.Show().ConfigureAwait(false);
-            }
-
-        }
-
-
-        [RelayCommand]
-        private async void DeleteSchedule()
-        {
-            if (_selectedAppointment is not null)
-            {
-                var request = new RestRequest($"/api/workschedule/{_selectedAppointment.StartTime.Year}/{_selectedAppointment.StartTime.Month}/{_selectedAppointment.StartTime.Day}");
-
-                await _client.DeleteAsync(request);
-                await UpdateScheduler(_visibleDates);
-            }
-        }
-
-        private string CreateSubject(string workStyle, string workingPlace)
+        private static string CreateSubject(string workStyle, string workingPlace)
         {
             if (string.IsNullOrEmpty(workingPlace))
             {
@@ -203,7 +165,7 @@ namespace WorkScheduler.ViewModels
             return $"{workStyle}[{workingPlace}]";
         }
 
-        private EventInfo DivideSubject(string subject)
+        private static EventInfo SplitSubject(string subject)
         {
             var workStyle = subject.Substring(0, subject.IndexOf('['));
             var workingPlace = subject.Substring(subject.IndexOf('[') + 1, subject.IndexOf(']') - subject.IndexOf('[') - 1);
