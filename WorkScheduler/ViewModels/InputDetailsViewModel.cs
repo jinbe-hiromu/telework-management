@@ -34,7 +34,9 @@ public partial class InputDetailsViewModel : ObservableObject
     public ObservableCollection<string> WorkStyles { get; } = new();
     public ObservableCollection<string> WorkingPlaces { get; } = new();
     public Size Size { get; } = new Size(500, 400);
-    public DateTime Date { get; set; }
+
+    [ObservableProperty]
+    public DateTime _date;
 
     public bool IsOkEnabled => StartTime < EndTime;
 

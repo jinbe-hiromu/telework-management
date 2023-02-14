@@ -2,6 +2,7 @@
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Maui.Core.Hosting;
+using WorkScheduler.Models;
 using WorkScheduler.Services;
 using WorkScheduler.ViewModels;
 using WorkScheduler.Views;
@@ -31,6 +32,7 @@ public static class MauiProgram
         builder.Services.AddTransient<DataQueryView>();
         builder.Services.AddTransient<DataQueryViewModel>();
         builder.Services.AddSingleton(new CookieContainer());
+        builder.Services.AddSingleton<IWorkSchedulerClient,WorkSchedulerClient>();
         builder.Services.AddSingleton<INavigationService, NavigationService>();
 
 #if DEBUG

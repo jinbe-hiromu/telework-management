@@ -5,15 +5,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:WorkScheduler.ViewModels"
-    Size="{Binding Size}">
+    Size="{Binding Size}"
+    Color="White">
     <toolkit:Popup.BindingContext>
         <vm:InputDetailsViewModel />
     </toolkit:Popup.BindingContext>
 
-    <VerticalStackLayout>
+    <Border Stroke="Black" StrokeThickness="2">
+    <VerticalStackLayout Padding="10">
         <Label
             HorizontalOptions="Start"
-            Text="いつ"
+            Text="日付"
             VerticalOptions="Start" />
         <DatePicker Date="{Binding Date}" Format="yyyy/MM/dd" />
         <Label
@@ -32,7 +34,7 @@
             Text="場所"
             VerticalOptions="Start" />
         <Picker ItemsSource="{Binding WorkingPlaces}" SelectedItem="{Binding SelectedWorkingPlace}" />
-        <HorizontalStackLayout HorizontalOptions="End" VerticalOptions="End">
+        <HorizontalStackLayout HorizontalOptions="End" VerticalOptions="End" Spacing="5">
             <Button Command="{Binding CancelCommand}" Text="Cancel" />
             <Button
                 Command="{Binding OkCommand}"
@@ -40,5 +42,6 @@
                 Text="OK" />
         </HorizontalStackLayout>
     </VerticalStackLayout>
+    </Border>
 
 </toolkit:Popup>
