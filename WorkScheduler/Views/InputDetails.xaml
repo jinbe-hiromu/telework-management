@@ -4,25 +4,28 @@
              x:Class="WorkScheduler.Views.InputDetails"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:vm="clr-namespace:WorkScheduler.ViewModels"
-             Size="{Binding Size}">
+             Size="{Binding Size}" 
+             Color="White">
+    
     <toolkit:Popup.BindingContext>
         <vm:InputDetailsViewModel />
     </toolkit:Popup.BindingContext>
-
-    <VerticalStackLayout>
-        <Label Text="いつ" VerticalOptions="Start" HorizontalOptions="Start" />
-        <DatePicker Date="{Binding Date}" Format="yyyy/MM/dd"/>
-        <Label Text="時間 開始‐終了" VerticalOptions="Start" HorizontalOptions="Start" />
-        <TimePicker Time="{Binding StartTime}" Format="HH:mm"/>
-        <TimePicker Time="{Binding EndTime}" Format="HH:mm"/>
-        <Label Text="状態" VerticalOptions="Start" HorizontalOptions="Start" />
-        <Picker ItemsSource="{Binding WorkStyles}" SelectedItem="{Binding SelectedWorkStyle}"/>
-        <Label Text="場所" VerticalOptions="Start" HorizontalOptions="Start" />
-        <Picker ItemsSource="{Binding WorkingPlaces}" SelectedItem="{Binding SelectedWorkingPlace}"/>
-        <HorizontalStackLayout VerticalOptions="End" HorizontalOptions="End">
-            <Button Text="Cancel" Command="{Binding CancelCommand}"/>
-            <Button Text="OK" Command="{Binding OkCommand}" IsEnabled="{Binding EnableOkCommand}"/>
-        </HorizontalStackLayout>
-    </VerticalStackLayout>
-
+    
+    <Border Stroke="Black" StrokeThickness="2">
+        <VerticalStackLayout Padding="10">
+            <Label Text="日付" VerticalOptions="Start" HorizontalOptions="Start" />
+            <DatePicker Date="{Binding Date}" Format="yyyy/MM/dd"/>
+            <Label Text="時間 開始‐終了" VerticalOptions="Start" HorizontalOptions="Start" />
+            <TimePicker Time="{Binding StartTime}" Format="HH:mm"/>
+            <TimePicker Time="{Binding EndTime}" Format="HH:mm"/>
+            <Label Text="状態" VerticalOptions="Start" HorizontalOptions="Start" />
+            <Picker ItemsSource="{Binding WorkStyles}" SelectedItem="{Binding SelectedWorkStyle}"/>
+            <Label Text="場所" VerticalOptions="Start" HorizontalOptions="Start" />
+            <Picker ItemsSource="{Binding WorkingPlaces}" SelectedItem="{Binding SelectedWorkingPlace}"/>
+            <HorizontalStackLayout VerticalOptions="End" HorizontalOptions="End" Spacing="5">
+                <Button Text="Cancel" Command="{Binding CancelCommand}"/>
+                <Button Text="OK" Command="{Binding OkCommand}" IsEnabled="{Binding EnableOkCommand}"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </Border>
 </toolkit:Popup>
