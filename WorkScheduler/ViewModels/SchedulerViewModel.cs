@@ -113,7 +113,7 @@ namespace WorkScheduler.ViewModels
                         {
                             StartTime = schedule.StartTime,
                             EndTime = schedule.EndTime,
-                            Subject = SchedulerViewModel.CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
+                            Subject = CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
                             Background = new SolidColorBrush(Colors.LightBlue)
                         });
                     }
@@ -123,7 +123,7 @@ namespace WorkScheduler.ViewModels
                         {
                             StartTime = schedule.StartTime,
                             EndTime = schedule.EndTime,
-                            Subject = SchedulerViewModel.CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
+                            Subject = CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
                             Background = new SolidColorBrush(Colors.LightGoldenrodYellow)
                         });
                     }
