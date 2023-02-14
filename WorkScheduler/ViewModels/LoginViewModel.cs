@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Net;
+using System.Security.Authentication;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RestSharp;
+using WorkScheduler.Models;
 using WorkScheduler.Services;
 
 namespace WorkScheduler.ViewModels
@@ -16,37 +18,26 @@ namespace WorkScheduler.ViewModels
         private string _password = string.Empty;
 
         private readonly INavigationService _navigation;
-        private readonly RestClient _client;
-        private readonly CookieContainer _cookies;
+        private readonly IWorkSchedulerClient _client;
 
-        public LoginViewModel(INavigationService navigation, CookieContainer cookies)
+        public LoginViewModel(INavigationService navigation, IWorkSchedulerClient client)
         {
             _navigation = navigation;
-            _client = new RestClient("http://localhost:5000");
-            _cookies = cookies;
+            _client = client;
         }
 
         [RelayCommand]
         private async Task LoginAsync()
         {
-            var request = new RestRequest($"/account/login?redirectUrl=", Method.Post);
-            request.AddParameter("Username", Username);
-            request.AddParameter("Password", Password);
-
             try
             {
-                var response = _client.PostAsync(request).Result;
-
-                if (response.StatusCode == HttpStatusCode.OK && response.Cookies.Count > 0)
-                {
-                    _cookies.Add(new Uri("http://localhost"), response.Cookies);
-                    await _navigation.NavigateToMain();
-                }
-                else
-                {
-                    var toast = Toast.Make("ユーザ名かパスワードが間違っています。", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
-                    await toast.Show().ConfigureAwait(false);
-                }
+                await _client.LoginAsync(Username, Password);
+                await _navigation.NavigateToMain();
+            }
+            catch(AuthenticationException)
+            {
+                var toast = Toast.Make("ユーザ名かパスワードが間違っています。", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
+                await toast.Show().ConfigureAwait(false);
             }
             catch (Exception ex)
             {

@@ -14,8 +14,8 @@ namespace WorkScheduler.ViewModels
 {
     public partial class SchedulerViewModel : ObservableObject
     {
-        private RestClient _client = new RestClient("http://localhost:5000");
         private IList<DateTime> _visibleDates;
+        private IWorkSchedulerClient _client;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(EditScheduleCommand))]
@@ -26,10 +26,9 @@ namespace WorkScheduler.ViewModels
 
         public bool IsSelected => SelectedAppointment is not null;
 
-        public SchedulerViewModel(CookieContainer cookies)
+        public SchedulerViewModel(IWorkSchedulerClient client)
         {
-            var cookie = cookies.GetCookies(new Uri("https://localhost")).First();
-            _client.AddCookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain);
+            _client = client;
         }
 
         [RelayCommand]
@@ -61,15 +60,14 @@ namespace WorkScheduler.ViewModels
             var result = await Shell.Current.ShowPopupAsync(new InputDetails());
             if (result is InputDetailsContact output)
             {
-                await AddEvent(output);
+                await AddSchedule(output);
             }
         }
 
         [RelayCommand(CanExecute = nameof(IsSelected))]
         private async void EditSchedule()
         {
-            var info = SchedulerViewModel.SplitSubject(SelectedAppointment.Subject);
-            //var view = new InputDetails();
+            var info = SplitSubject(SelectedAppointment.Subject);
             var arg = new InputDetailsContact
             {
                 Date = SelectedAppointment.StartTime,
@@ -82,16 +80,14 @@ namespace WorkScheduler.ViewModels
             var result = await Shell.Current.ShowPopupAsync(new InputDetails(arg));
             if (result is InputDetailsContact output)
             {
-                await AddEvent(output);
+                await AddSchedule(output);
             }
         }
 
         [RelayCommand(CanExecute = nameof(IsSelected))]
         private async void DeleteSchedule()
         {
-            var request = new RestRequest($"/api/workschedule/{SelectedAppointment.StartTime.Year}/{SelectedAppointment.StartTime.Month}/{SelectedAppointment.StartTime.Day}");
-
-            await _client.DeleteAsync(request);
+            await _client.DeleteScheduleAsync(SelectedAppointment.StartTime);
             await UpdateScheduler(_visibleDates);
         }
 
@@ -101,9 +97,7 @@ namespace WorkScheduler.ViewModels
 
             foreach (var targetDate in targetDates)
             {
-                var request = new RestRequest($"/api/workschedule/{targetDate.Year}/{targetDate.Month}/{targetDate.Day}");
-
-                var schedules = await _client.GetAsync<IEnumerable<Schedule>>(request);
+                var schedules = await _client.GetScheduleAsync(targetDate);
 
                 foreach (var schedule in schedules)
                 {
@@ -131,23 +125,11 @@ namespace WorkScheduler.ViewModels
             }
         }
 
-        private async Task AddEvent(InputDetailsContact output)
+        private async Task AddSchedule(InputDetailsContact output)
         {
-            var eventInfo = new EventInfo
-            {
-                Date = output.Date.ToString("yyyy-MM-dd"),
-                StartTime = output.Date.ToString("yyyy-MM-dd") + "T" + output.StartTime.ToString(@"hh\:mm"),        // Format:"2023-01-30T08:40"
-                EndTime = output.Date.ToString("yyyy-MM-dd") + "T" + output.EndTime.ToString(@"hh\:mm"),
-                WorkStyle = output.WorkStyle,
-                WorkingPlace = output.WorkingPlace,
-            };
-
-            var request = new RestRequest($"/api/workschedule/{output.Date.Year}/{output.Date.Month}/{output.Date.Day}");
-            request.AddBody(eventInfo);
-
             try
             {
-                var response = await _client.PostAsync(request);
+                await _client.AddScheduleAsync(output);
                 await UpdateScheduler(_visibleDates);
             }
             catch (Exception ex)
@@ -172,14 +154,5 @@ namespace WorkScheduler.ViewModels
 
             return new EventInfo { WorkStyle = workStyle, WorkingPlace = workingPlace };
         }
-    }
-
-    internal class EventInfo
-    {
-        public string Date { get; set; }
-        public string StartTime { get; set; }
-        public string EndTime { get; set; }
-        public string WorkStyle { get; set; }
-        public string WorkingPlace { get; set; }
     }
 }
