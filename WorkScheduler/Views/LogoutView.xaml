@@ -4,9 +4,7 @@
              x:Class="WorkScheduler.Views.LogoutView"
              xmlns:vm="clr-namespace:WorkScheduler.ViewModels"
              Title="LogoutView">
-    <ContentPage.BindingContext>
-        <vm:LogoutViewModel />
-    </ContentPage.BindingContext>
+
     <VerticalStackLayout>
         <Label Text="ログアウトしますか？" VerticalOptions="Center" HorizontalOptions="Center" FontSize="30"/>
         <Button Text="はい" Command="{Binding LogoutCommand}"/>
