@@ -67,6 +67,15 @@ public partial class InputDetailsViewModel : ObservableObject
         SelectedWorkStyle = contact.WorkStyle;
     }
 
+    public InputDetailsViewModel(DateTime selectedDateTime)
+    {
+        Date = selectedDateTime.Date;
+        StartTime = new TimeSpan(selectedDateTime.Hour, 0, 0);
+        WorkStyles.Add(_workStyleGoingToWork);
+        WorkStyles.Add(_workStyleBusinessTrip);
+        WorkStyles.Add(_workStyleTelework);
+    }
+
     [RelayCommand]
     private void Ok()
     {

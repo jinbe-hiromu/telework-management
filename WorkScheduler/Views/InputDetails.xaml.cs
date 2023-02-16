@@ -21,4 +21,12 @@ public partial class InputDetails : Popup
         var vm = BindingContext as InputDetailsViewModel;
         vm.CloseRequested += Close;
     }
+
+    public InputDetails(DateTime selectedDateTime)
+    {
+        InitializeComponent();
+        BindingContext = new InputDetailsViewModel(selectedDateTime);
+        var vm = BindingContext as InputDetailsViewModel;
+        vm.CloseRequested += Close;
+    }
 }

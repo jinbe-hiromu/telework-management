@@ -16,6 +16,7 @@ namespace WorkScheduler.ViewModels
     {
         private IList<DateTime> _visibleDates;
         private IWorkSchedulerClient _client;
+        private DateTime selectedDateTime;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(EditScheduleCommand))]
@@ -34,7 +35,17 @@ namespace WorkScheduler.ViewModels
         [RelayCommand]
         private void Tapped(SchedulerTappedEventArgs e)
         {
-            SelectedAppointment = e?.Appointments is not null ? (SchedulerAppointment)e.Appointments.First() : null;
+            //SelectedAppointment = e?.Appointments is not null ? (SchedulerAppointment)e.Appointments.First() : null;
+
+            if (e is not null && e.Appointments is not null)
+            {
+                SelectedAppointment = (SchedulerAppointment)e.Appointments.First();
+            }
+            else
+            {
+                SelectedAppointment = null;
+                selectedDateTime = (DateTime)e.Date;
+            }
         }
 
         [RelayCommand]
@@ -57,7 +68,7 @@ namespace WorkScheduler.ViewModels
         [RelayCommand]
         private async void ShowInputDetails()
         {
-            var result = await Shell.Current.ShowPopupAsync(new InputDetails());
+            var result = await Shell.Current.ShowPopupAsync(new InputDetails(selectedDateTime));
             if (result is InputDetailsContact output)
             {
                 await AddSchedule(output);
