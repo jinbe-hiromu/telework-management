@@ -1,24 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WorkScheduler.Views;
+﻿using WorkScheduler.Models;
 
 namespace WorkScheduler.ViewModels
 {
-    class LogoutViewModel : BindableObject
+    public partial class LogoutViewModel : BindableObject
     {
+        private readonly IWorkSchedulerClient _client;
+
         public Command LogoutCommand { get; }
 
-        public LogoutViewModel()
+        public LogoutViewModel(IWorkSchedulerClient client)
         {
+            _client = client;
+
             LogoutCommand = new(OnLogoutClicked);
         }
 
         private async void OnLogoutClicked(object _)
         {
             //ログアウト処理
+            await _client.LogoutAsync();
+
             await Shell.Current.GoToAsync("..");
         }
 

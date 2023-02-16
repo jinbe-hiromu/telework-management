@@ -32,6 +32,14 @@ namespace WorkScheduler.Models
             throw new AuthenticationException("failed to login. wrong username or wrong password");
         }
 
+        public async Task LogoutAsync()
+        {
+            var request = new RestRequest($"/account/logout?redirectUrl=", Method.Post);
+
+            var response = await _client.PostAsync(request);
+
+        }
+
         public async Task DeleteScheduleAsync(DateTime day)
         {
             var request = new RestRequest($"/api/workschedule/{day.Year}/{day.Month}/{day.Day}");
