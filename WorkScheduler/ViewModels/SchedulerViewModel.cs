@@ -68,11 +68,13 @@ namespace WorkScheduler.ViewModels
         [RelayCommand]
         private async void ShowInputDetails()
         {
-            var result = await Shell.Current.ShowPopupAsync(new InputDetails(selectedDateTime));
+            //var result = await Shell.Current.ShowPopupAsync(new InputDetails());
+            var result = await Shell.Current.ShowPopupAsync(selectedDateTime.Year == 1 ? new InputDetails() : new InputDetails(selectedDateTime));
             if (result is InputDetailsContact output)
             {
                 await AddSchedule(output);
             }
+            selectedDateTime = DateTime.MinValue;
         }
 
         [RelayCommand(CanExecute = nameof(IsSelected))]

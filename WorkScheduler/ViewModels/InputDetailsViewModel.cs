@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.ApplicationModel.Communication;
 using WorkScheduler.Models;
 
 namespace WorkScheduler.ViewModels;
@@ -67,10 +68,12 @@ public partial class InputDetailsViewModel : ObservableObject
         SelectedWorkStyle = contact.WorkStyle;
     }
 
-    public InputDetailsViewModel(DateTime selectedDateTime)
+    public InputDetailsViewModel(DateTime selectedDateTime) : this(DefaultContact)
     {
         Date = selectedDateTime.Date;
         StartTime = new TimeSpan(selectedDateTime.Hour, 0, 0);
+
+        EndTime = selectedDateTime.Hour <= 17 ? new TimeSpan(17, 40, 0) : new TimeSpan(selectedDateTime.Hour + 1, 40, 0);
         WorkStyles.Add(_workStyleGoingToWork);
         WorkStyles.Add(_workStyleBusinessTrip);
         WorkStyles.Add(_workStyleTelework);
