@@ -19,7 +19,6 @@ namespace WorkScheduler.ViewModels
         {
             //ログアウト処理
             await _client.LogoutAsync();
-
             await Shell.Current.GoToAsync("..");
         }
 
