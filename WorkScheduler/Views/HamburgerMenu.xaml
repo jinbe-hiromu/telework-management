@@ -9,10 +9,6 @@
              IconImageSource="hamburger.png"
              Title="HamburgerMenu">
 
-    <ContentPage.BindingContext>
-        <vm:HamburgerMenuViewModel />
-    </ContentPage.BindingContext>
-
     <CollectionView x:Name="collectionView"
                     x:FieldModifier="public"
                     SelectionMode="Single">
