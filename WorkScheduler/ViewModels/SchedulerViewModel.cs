@@ -1,11 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Net;
-using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using RestSharp;
 using Syncfusion.Maui.Scheduler;
 using WorkScheduler.Models;
 using WorkScheduler.Views;
@@ -14,8 +11,8 @@ namespace WorkScheduler.ViewModels
 {
     public partial class SchedulerViewModel : ObservableObject
     {
+        private readonly IWorkSchedulerClient _client;
         private IList<DateTime> _visibleDates;
-        private IWorkSchedulerClient _client;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(EditScheduleCommand))]
@@ -41,7 +38,7 @@ namespace WorkScheduler.ViewModels
         private void DoubleTapped(SchedulerDoubleTappedEventArgs e)
         {
             SelectedAppointment = e?.Appointments is not null ? (SchedulerAppointment)e.Appointments.First() : null;
-            if (SelectedAppointment is not null)
+            if (IsSelected)
             {
                 EditSchedule();
             }
@@ -70,9 +67,8 @@ namespace WorkScheduler.ViewModels
             var info = SplitSubject(SelectedAppointment.Subject);
             var arg = new InputDetailsContact
             {
-                Date = SelectedAppointment.StartTime,
-                StartTime = new TimeSpan(SelectedAppointment.StartTime.Hour, SelectedAppointment.StartTime.Minute, SelectedAppointment.StartTime.Second),
-                EndTime = new TimeSpan(SelectedAppointment.EndTime.Hour, SelectedAppointment.EndTime.Minute, SelectedAppointment.EndTime.Second),
+                StartTime = SelectedAppointment.StartTime,
+                EndTime = SelectedAppointment.EndTime,
                 WorkStyle = info.WorkStyle,
                 WorkingPlace = info.WorkingPlace
             };
@@ -88,6 +84,7 @@ namespace WorkScheduler.ViewModels
         private async void DeleteSchedule()
         {
             await _client.DeleteScheduleAsync(SelectedAppointment.StartTime);
+            SelectedAppointment = null;
             await UpdateScheduler(_visibleDates);
         }
 
@@ -101,26 +98,15 @@ namespace WorkScheduler.ViewModels
 
                 foreach (var schedule in schedules)
                 {
-                    if (schedule.ScheduleType == ScheduleType.Plan)
+                    var bgColor = schedule.ScheduleType == ScheduleType.Plan ? Colors.LightBlue : Colors.LightGoldenrodYellow;
+
+                    SchedulerEvents.Add(new SchedulerAppointment
                     {
-                        SchedulerEvents.Add(new SchedulerAppointment
-                        {
-                            StartTime = schedule.StartTime,
-                            EndTime = schedule.EndTime,
-                            Subject = CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
-                            Background = new SolidColorBrush(Colors.LightBlue)
-                        });
-                    }
-                    else
-                    {
-                        SchedulerEvents.Add(new SchedulerAppointment
-                        {
-                            StartTime = schedule.StartTime,
-                            EndTime = schedule.EndTime,
-                            Subject = CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
-                            Background = new SolidColorBrush(Colors.LightGoldenrodYellow)
-                        });
-                    }
+                        StartTime = schedule.StartTime,
+                        EndTime = schedule.EndTime,
+                        Subject = CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
+                        Background = new SolidColorBrush(bgColor)
+                    });
                 }
             }
         }
