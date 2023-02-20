@@ -475,3 +475,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+/WorkScheduleServer/server/.config/dotnet-tools.json
