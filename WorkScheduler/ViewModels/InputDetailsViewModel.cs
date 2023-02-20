@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WorkScheduler.Models;
@@ -14,18 +13,17 @@ public partial class InputDetailsViewModel : ObservableObject
     private static readonly string _workingPlaceAgui = "ˆ¢‹v”ä";
     private static readonly string _workingPlaceKariya = "Š ’J";
     private static readonly string _workingPlaceAtHome = "Ž©‘î";
-    private static readonly Dictionary<string, string[]> _workingPlaceSet = new Dictionary<string, string[]>
+    private static readonly Dictionary<string, string[]> _workingPlaceSet = new()
     {
-        { _workStyleGoingToWork, new[]{ _workingPlaceAgui, } },
+        { _workStyleGoingToWork,  new[]{ _workingPlaceAgui,   } },
         { _workStyleBusinessTrip, new[]{ _workingPlaceKariya, } },
-        { _workStyleTelework, new[]{ _workingPlaceAtHome, } },
+        { _workStyleTelework,     new[]{ _workingPlaceAtHome, } },
     };
 
-    private static InputDetailsContact DefaultContact => new InputDetailsContact
+    private static InputDetailsContact DefaultContact => new()
     {
-        Date = DateTime.Now,
-        StartTime = new TimeSpan(8, 40, 0),
-        EndTime = new TimeSpan(17, 40, 0),
+        StartTime = DateTime.Today + new TimeSpan(8, 40, 0),
+        EndTime = DateTime.Today + new TimeSpan(17, 40, 0),
         WorkStyle = _workStyleGoingToWork,
         WorkingPlace = _workingPlaceAgui,
     };
@@ -33,12 +31,11 @@ public partial class InputDetailsViewModel : ObservableObject
     public event Action<object> CloseRequested;
     public ObservableCollection<string> WorkStyles { get; } = new();
     public ObservableCollection<string> WorkingPlaces { get; } = new();
-    public Size Size { get; } = new Size(500, 400);
+    public Size Size => new(500, 400);
+    public bool IsOkEnabled => StartTime < EndTime;
 
     [ObservableProperty]
-    public DateTime _date;
-
-    public bool IsOkEnabled => StartTime < EndTime;
+    private DateTime _date;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsOkEnabled))]
@@ -58,13 +55,14 @@ public partial class InputDetailsViewModel : ObservableObject
 
     public InputDetailsViewModel(InputDetailsContact contact)
     {
-        Date = contact.Date;
-        StartTime = contact.StartTime;
-        EndTime = contact.EndTime;
+        Date = contact.StartTime.Date;
+        StartTime = contact.StartTime.TimeOfDay;
+        EndTime = contact.EndTime.TimeOfDay;
         WorkStyles.Add(_workStyleGoingToWork);
         WorkStyles.Add(_workStyleBusinessTrip);
         WorkStyles.Add(_workStyleTelework);
         SelectedWorkStyle = contact.WorkStyle;
+        SelectedWorkingPlace = contact.WorkingPlace;
     }
 
     [RelayCommand]
@@ -72,9 +70,8 @@ public partial class InputDetailsViewModel : ObservableObject
     {
         CloseRequested.Invoke(new InputDetailsContact
         {
-            Date = Date,
-            StartTime = StartTime,
-            EndTime = EndTime,
+            StartTime = Date + StartTime,
+            EndTime = Date + EndTime,
             WorkStyle = SelectedWorkStyle,
             WorkingPlace = SelectedWorkingPlace,
         });
@@ -88,16 +85,14 @@ public partial class InputDetailsViewModel : ObservableObject
 
     partial void OnSelectedWorkStyleChanged(string value)
     {
-        Debug.WriteLine(value);
-        if (value != null)
-        {
-            WorkingPlaces.Clear();
-            foreach (var item in _workingPlaceSet.TryGetValue(value, out var items) ? items : Array.Empty<string>())
-            {
-                WorkingPlaces.Add(item);
-            }
+        if (value is null) { return; }
 
-            SelectedWorkingPlace = WorkingPlaces.First();
+        WorkingPlaces.Clear();
+        foreach (var item in _workingPlaceSet.TryGetValue(value, out var items) ? items : Array.Empty<string>())
+        {
+            WorkingPlaces.Add(item);
         }
+
+        SelectedWorkingPlace = WorkingPlaces.First();
     }
 }
