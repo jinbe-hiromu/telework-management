@@ -1,8 +1,11 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Security.Authentication;
 using RestSharp;
+using WorkScheduler.Models;
+using WorkScheduler.Services.Interfaces;
 
-namespace WorkScheduler.Models
+namespace WorkScheduler.Services
 {
     public class WorkSchedulerClient : IWorkSchedulerClient
     {
@@ -35,14 +38,14 @@ namespace WorkScheduler.Models
 
         public async Task LogoutAsync()
         {
-            var request = new RestRequest($"/account/logout?redirectUrl=", Method.Post);
+            var request = new RestRequest($"/account/logout", Method.Post);
             var response = await _client.PostAsync(request);
-            
-            if (response.StatusCode == HttpStatusCode.OK && response.Cookies.Count > 0)
+
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 return;
             }
-            throw new AuthenticationException("failed to logout. ");
+            Debug.Assert(false, response.ErrorMessage);
         }
 
         public async Task DeleteScheduleAsync(DateTime target)

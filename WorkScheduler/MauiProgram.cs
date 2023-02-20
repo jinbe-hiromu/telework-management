@@ -2,7 +2,6 @@
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Maui.Core.Hosting;
-using WorkScheduler.Models;
 using WorkScheduler.Services;
 using WorkScheduler.ViewModels;
 using WorkScheduler.Views;
@@ -26,8 +25,6 @@ public static class MauiProgram
 
         builder.Services.AddTransient<LoginView>();
         builder.Services.AddTransient<LoginViewModel>();
-        builder.Services.AddTransient<LogoutView>();
-        builder.Services.AddTransient<LogoutViewModel>();
         builder.Services.AddTransient<SchedulerView>();
         builder.Services.AddTransient<SchedulerViewModel>();
         builder.Services.AddTransient<MainPage>();

@@ -5,14 +5,15 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Syncfusion.Maui.Scheduler;
 using WorkScheduler.Models;
+using WorkScheduler.Services;
 using WorkScheduler.Views;
 
 namespace WorkScheduler.ViewModels
 {
     public partial class SchedulerViewModel : ObservableObject
     {
-        private readonly IWorkSchedulerClient _client;
         private IList<DateTime> _visibleDates;
+        private IWorkSchedulerClient _client;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(EditScheduleCommand))]
@@ -38,9 +39,9 @@ namespace WorkScheduler.ViewModels
         private void DoubleTapped(SchedulerDoubleTappedEventArgs e)
         {
             SelectedAppointment = e?.Appointments is not null ? (SchedulerAppointment)e.Appointments.First() : null;
-            if (IsSelected)
+            if (SelectedAppointment is not null)
             {
-                EditSchedule();
+                EditScheduleAsync().Wait();
             }
         }
 
@@ -48,7 +49,7 @@ namespace WorkScheduler.ViewModels
         private async void ViewChanged(SchedulerViewChangedEventArgs e)
         {
             _visibleDates = e.NewVisibleDates;
-            await UpdateScheduler(e.NewVisibleDates);
+            await UpdateSchedule(e.NewVisibleDates);
         }
 
         [RelayCommand]
@@ -62,7 +63,7 @@ namespace WorkScheduler.ViewModels
         }
 
         [RelayCommand(CanExecute = nameof(IsSelected))]
-        private async void EditSchedule()
+        private async Task EditScheduleAsync()
         {
             var info = SplitSubject(SelectedAppointment.Subject);
             var arg = new InputDetailsContact
@@ -81,14 +82,13 @@ namespace WorkScheduler.ViewModels
         }
 
         [RelayCommand(CanExecute = nameof(IsSelected))]
-        private async void DeleteSchedule()
+        private async Task DeleteScheduleAsync()
         {
             await _client.DeleteScheduleAsync(SelectedAppointment.StartTime);
-            SelectedAppointment = null;
-            await UpdateScheduler(_visibleDates);
+            await UpdateSchedule(_visibleDates);
         }
 
-        private async Task UpdateScheduler(IList<DateTime> targetDates)
+        private async Task UpdateSchedule(IList<DateTime> targetDates)
         {
             SchedulerEvents.Clear();
 
@@ -116,7 +116,7 @@ namespace WorkScheduler.ViewModels
             try
             {
                 await _client.AddScheduleAsync(output);
-                await UpdateScheduler(_visibleDates);
+                await UpdateSchedule(_visibleDates);
             }
             catch (Exception ex)
             {
