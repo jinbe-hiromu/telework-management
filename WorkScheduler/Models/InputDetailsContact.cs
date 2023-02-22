@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WorkScheduler.Models
+﻿namespace WorkScheduler.Models
 {
     public class InputDetailsContact
     {
-        public DateTime Date { get; init; }
-        public TimeSpan StartTime { get; init; }
-        public TimeSpan EndTime { get; init; }
+        public DateTime StartTime { get; init; }
+        public DateTime EndTime { get; init; }
         public string WorkStyle { get; init; }
         public string WorkingPlace { get; init; }
     }

@@ -1,4 +1,6 @@
-﻿namespace WorkScheduler.Models
+﻿using WorkScheduler.Models;
+
+namespace WorkScheduler.Services
 {
     public interface IWorkSchedulerClient
     {

@@ -1,11 +1,8 @@
 ﻿using System.Diagnostics;
-using System.Net;
 using System.Security.Authentication;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using RestSharp;
-using WorkScheduler.Models;
 using WorkScheduler.Services;
 
 namespace WorkScheduler.ViewModels
@@ -34,7 +31,7 @@ namespace WorkScheduler.ViewModels
                 await _client.LoginAsync(Username, Password);
                 await _navigation.NavigateToMain();
             }
-            catch(AuthenticationException)
+            catch (AuthenticationException)
             {
                 var toast = Toast.Make("ユーザ名かパスワードが間違っています。", CommunityToolkit.Maui.Core.ToastDuration.Short, 14);
                 await toast.Show().ConfigureAwait(false);

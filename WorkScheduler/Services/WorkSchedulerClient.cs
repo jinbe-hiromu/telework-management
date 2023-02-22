@@ -1,8 +1,11 @@
-﻿using RestSharp;
+﻿using System.Diagnostics;
 using System.Net;
 using System.Security.Authentication;
+using RestSharp;
+using WorkScheduler.Models;
+using WorkScheduler.Services.Interfaces;
 
-namespace WorkScheduler.Models
+namespace WorkScheduler.Services
 {
     public class WorkSchedulerClient : IWorkSchedulerClient
     {
@@ -10,7 +13,8 @@ namespace WorkScheduler.Models
 
         public WorkSchedulerClient() : this("http://localhost:5000") { }
 
-        public WorkSchedulerClient(string endPoint) {
+        public WorkSchedulerClient(string endPoint)
+        {
             _client = new RestClient(endPoint);
         }
 
@@ -34,25 +38,25 @@ namespace WorkScheduler.Models
 
         public async Task LogoutAsync()
         {
-            var request = new RestRequest($"/account/logout?redirectUrl=", Method.Post);
+            var request = new RestRequest($"/account/logout", Method.Post);
             var response = await _client.PostAsync(request);
-            
-            if (response.StatusCode == HttpStatusCode.OK && response.Cookies.Count > 0)
+
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 return;
             }
-            throw new AuthenticationException("failed to logout. ");
+            Debug.Assert(false, response.ErrorMessage);
         }
 
-        public async Task DeleteScheduleAsync(DateTime day)
+        public async Task DeleteScheduleAsync(DateTime target)
         {
-            var request = new RestRequest($"/api/workschedule/{day.Year}/{day.Month}/{day.Day}");
+            var request = new RestRequest($"/api/workschedule/{target.Year}/{target.Month}/{target.Day}");
             await _client.DeleteAsync(request);
         }
 
-        public async Task<IEnumerable<Schedule>> GetScheduleAsync(DateTime day)
+        public async Task<IEnumerable<Schedule>> GetScheduleAsync(DateTime target)
         {
-            var request = new RestRequest($"/api/workschedule/{day.Year}/{day.Month}/{day.Day}");
+            var request = new RestRequest($"/api/workschedule/{target.Year}/{target.Month}/{target.Day}");
             return await _client.GetAsync<IEnumerable<Schedule>>(request);
         }
 
@@ -60,17 +64,19 @@ namespace WorkScheduler.Models
         {
             var eventInfo = new EventInfo
             {
-                Date = addSchedule.Date.ToString("yyyy-MM-dd"),
-                StartTime = addSchedule.Date.ToString("yyyy-MM-dd") + "T" + addSchedule.StartTime.ToString(@"hh\:mm"),        // Format:"2023-01-30T08:40"
-                EndTime = addSchedule.Date.ToString("yyyy-MM-dd") + "T" + addSchedule.EndTime.ToString(@"hh\:mm"),
+                Date = addSchedule.StartTime.ToString("yyyy-MM-dd"),
+                StartTime = addSchedule.StartTime.ToString("yyyy-MM-ddTHH:mm"), // Format:"2023-01-30T08:40"
+                EndTime = addSchedule.EndTime.ToString("yyyy-MM-ddTHH:mm"),
                 WorkStyle = addSchedule.WorkStyle,
                 WorkingPlace = addSchedule.WorkingPlace,
             };
 
-            var request = new RestRequest($"/api/workschedule/{addSchedule.Date.Year}/{addSchedule.Date.Month}/{addSchedule.Date.Day}");
+            var target = addSchedule.StartTime.Date;
+            var request = new RestRequest($"/api/workschedule/{target.Year}/{target.Month}/{target.Day}");
             request.AddBody(eventInfo);
             var response = await _client.PostAsync(request);
-            if (!response.IsSuccessful){
+            if (!response.IsSuccessful)
+            {
                 throw new HttpRequestException();
             }
         }

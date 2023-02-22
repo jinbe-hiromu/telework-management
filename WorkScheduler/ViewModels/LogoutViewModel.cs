@@ -1,29 +1,27 @@
-﻿using WorkScheduler.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using WorkScheduler.Services;
+using WorkScheduler.Models;
 using WorkScheduler.Services;
 
 namespace WorkScheduler.ViewModels
 {
-    public partial class LogoutViewModel : BindableObject
+    public partial class LogoutViewModel : ObservableObject
     {
         private readonly IWorkSchedulerClient _client;
         private readonly INavigationService _navigationService;
-
-        public Command LogoutCommand { get; }
 
         public LogoutViewModel(IWorkSchedulerClient client, INavigationService navigationService)
         {
             _client = client;
             _navigationService = navigationService;
-
-            LogoutCommand = new(OnLogoutClicked);
         }
 
-        private async void OnLogoutClicked(object _)
+        [RelayCommand]
+        private async Task Logout()
         {
             await _client.LogoutAsync();
             await _navigationService.NavigateToLogin();
         }
-
     }
-
 }

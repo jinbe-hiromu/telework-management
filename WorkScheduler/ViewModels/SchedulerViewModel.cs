@@ -1,13 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Net;
-using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using RestSharp;
 using Syncfusion.Maui.Scheduler;
 using WorkScheduler.Models;
+using WorkScheduler.Services;
 using WorkScheduler.Views;
 
 namespace WorkScheduler.ViewModels
@@ -43,7 +41,7 @@ namespace WorkScheduler.ViewModels
             SelectedAppointment = e?.Appointments is not null ? (SchedulerAppointment)e.Appointments.First() : null;
             if (SelectedAppointment is not null)
             {
-                EditSchedule();
+                EditScheduleAsync().Wait();
             }
         }
 
@@ -51,7 +49,7 @@ namespace WorkScheduler.ViewModels
         private async void ViewChanged(SchedulerViewChangedEventArgs e)
         {
             _visibleDates = e.NewVisibleDates;
-            await UpdateScheduler(e.NewVisibleDates);
+            await UpdateSchedule(e.NewVisibleDates);
         }
 
         [RelayCommand]
@@ -65,14 +63,13 @@ namespace WorkScheduler.ViewModels
         }
 
         [RelayCommand(CanExecute = nameof(IsSelected))]
-        private async void EditSchedule()
+        private async Task EditScheduleAsync()
         {
             var info = SplitSubject(SelectedAppointment.Subject);
             var arg = new InputDetailsContact
             {
-                Date = SelectedAppointment.StartTime,
-                StartTime = new TimeSpan(SelectedAppointment.StartTime.Hour, SelectedAppointment.StartTime.Minute, SelectedAppointment.StartTime.Second),
-                EndTime = new TimeSpan(SelectedAppointment.EndTime.Hour, SelectedAppointment.EndTime.Minute, SelectedAppointment.EndTime.Second),
+                StartTime = SelectedAppointment.StartTime,
+                EndTime = SelectedAppointment.EndTime,
                 WorkStyle = info.WorkStyle,
                 WorkingPlace = info.WorkingPlace
             };
@@ -85,13 +82,13 @@ namespace WorkScheduler.ViewModels
         }
 
         [RelayCommand(CanExecute = nameof(IsSelected))]
-        private async void DeleteSchedule()
+        private async Task DeleteScheduleAsync()
         {
             await _client.DeleteScheduleAsync(SelectedAppointment.StartTime);
-            await UpdateScheduler(_visibleDates);
+            await UpdateSchedule(_visibleDates);
         }
 
-        private async Task UpdateScheduler(IList<DateTime> targetDates)
+        private async Task UpdateSchedule(IList<DateTime> targetDates)
         {
             SchedulerEvents.Clear();
 
@@ -101,26 +98,15 @@ namespace WorkScheduler.ViewModels
 
                 foreach (var schedule in schedules)
                 {
-                    if (schedule.ScheduleType == ScheduleType.Plan)
+                    var bgColor = schedule.ScheduleType == ScheduleType.Plan ? Colors.LightBlue : Colors.LightGoldenrodYellow;
+
+                    SchedulerEvents.Add(new SchedulerAppointment
                     {
-                        SchedulerEvents.Add(new SchedulerAppointment
-                        {
-                            StartTime = schedule.StartTime,
-                            EndTime = schedule.EndTime,
-                            Subject = CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
-                            Background = new SolidColorBrush(Colors.LightBlue)
-                        });
-                    }
-                    else
-                    {
-                        SchedulerEvents.Add(new SchedulerAppointment
-                        {
-                            StartTime = schedule.StartTime,
-                            EndTime = schedule.EndTime,
-                            Subject = CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
-                            Background = new SolidColorBrush(Colors.LightGoldenrodYellow)
-                        });
-                    }
+                        StartTime = schedule.StartTime,
+                        EndTime = schedule.EndTime,
+                        Subject = CreateSubject(schedule.WorkStyle, schedule.WorkingPlace),
+                        Background = new SolidColorBrush(bgColor)
+                    });
                 }
             }
         }
@@ -130,7 +116,7 @@ namespace WorkScheduler.ViewModels
             try
             {
                 await _client.AddScheduleAsync(output);
-                await UpdateScheduler(_visibleDates);
+                await UpdateSchedule(_visibleDates);
             }
             catch (Exception ex)
             {
