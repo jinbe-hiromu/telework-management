@@ -31,17 +31,18 @@ internal class NavigationService : INavigationService
 
     public Task NavigateToDataQuery() => NavigateTo<DataQueryView>();
 
-    public Task<InputDetailsContact> PopupTo<InputDetails>()
-    {
-        if(DeviceInfo.Platform == DevicePlatform.WinUI || DeviceInfo.Platform == DevicePlatform.MacCatalyst)
-        {
-            return PopupTo<>
-        }
-        else
-        {
+    //public Task<InputDetailsContact> NavigateToInputDetails(InputDetails)
+    //{
+    //    NavigateTo<>
+    //    //if(DeviceInfo.Platform == DevicePlatform.WinUI || DeviceInfo.Platform == DevicePlatform.MacCatalyst)
+    //    //{
+    //    //    return PopupTo<>
+    //    //}
+    //    //else
+    //    //{
 
-        }
-    }
+    //    //}
+    //}
 
 
     public Task NavigateTo<T>() where T : Page
