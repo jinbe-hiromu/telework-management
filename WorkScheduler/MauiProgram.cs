@@ -30,6 +30,7 @@ public static class MauiProgram
         builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<DataQueryView>();
         builder.Services.AddTransient<DataQueryViewModel>();
+        builder.Services.AddTransient<InputDetails>();
         builder.Services.AddSingleton(new CookieContainer());
         builder.Services.AddSingleton<IWorkSchedulerClient,WorkSchedulerClient>();
         builder.Services.AddSingleton<INavigationService, NavigationService>();

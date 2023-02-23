@@ -2,10 +2,12 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WorkScheduler.Models;
+using WorkScheduler.Services;
+using WorkScheduler.Services.Interfaces;
 
 namespace WorkScheduler.ViewModels;
 
-public partial class InputDetailsViewModel : ObservableObject
+public partial class InputDetailsViewModel : ObservableObject, IParameterAware
 {
     private static readonly string _workStyleGoingToWork = "oŽÐ";
     private static readonly string _workStyleBusinessTrip = "o’£";
@@ -19,6 +21,7 @@ public partial class InputDetailsViewModel : ObservableObject
         { _workStyleBusinessTrip, new[]{ _workingPlaceKariya, } },
         { _workStyleTelework,     new[]{ _workingPlaceAtHome, } },
     };
+    private readonly INavigationService _navigationService;
 
     private static InputDetailsContact DefaultContact => new()
     {
@@ -28,11 +31,18 @@ public partial class InputDetailsViewModel : ObservableObject
         WorkingPlace = _workingPlaceAgui,
     };
 
+    public InputDetailsViewModel(INavigationService navigationService)
+    {
+        _navigationService = navigationService;
+    }
+
     public event Action<object> CloseRequested;
     public ObservableCollection<string> WorkStyles { get; } = new();
     public ObservableCollection<string> WorkingPlaces { get; } = new();
-    public Size Size => new(500, 400);
     public bool IsOkEnabled => StartTime < EndTime;
+
+    [ObservableProperty]
+    public Size _size;
 
     [ObservableProperty]
     private DateTime _date;
@@ -63,6 +73,21 @@ public partial class InputDetailsViewModel : ObservableObject
         WorkStyles.Add(_workStyleTelework);
         SelectedWorkStyle = contact.WorkStyle;
         SelectedWorkingPlace = contact.WorkingPlace;
+    }
+
+    public void Initialize(object parameter)
+    {
+        if(parameter is InputDetailsContact contact)
+        {
+            Date = contact.StartTime.Date;
+            StartTime = contact.StartTime.TimeOfDay;
+            EndTime = contact.EndTime.TimeOfDay;
+            WorkStyles.Add(_workStyleGoingToWork);
+            WorkStyles.Add(_workStyleBusinessTrip);
+            WorkStyles.Add(_workStyleTelework);
+            SelectedWorkStyle = contact.WorkStyle;
+            SelectedWorkingPlace = contact.WorkingPlace;
+        }
     }
 
     [RelayCommand]

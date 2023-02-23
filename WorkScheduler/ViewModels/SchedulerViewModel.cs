@@ -6,15 +6,16 @@ using CommunityToolkit.Mvvm.Input;
 using Syncfusion.Maui.Scheduler;
 using WorkScheduler.Models;
 using WorkScheduler.Services;
+using WorkScheduler.Services.Interfaces;
 using WorkScheduler.Views;
 
 namespace WorkScheduler.ViewModels
 {
-    public partial class SchedulerViewModel : ObservableObject
+    public partial class SchedulerViewModel : ObservableObject, IParameterAware
     {
         private IList<DateTime> _visibleDates;
         private IWorkSchedulerClient _client;
-
+        private readonly INavigationService _navigationService;
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(EditScheduleCommand))]
         [NotifyCanExecuteChangedFor(nameof(DeleteScheduleCommand))]
@@ -24,9 +25,18 @@ namespace WorkScheduler.ViewModels
 
         public bool IsSelected => SelectedAppointment is not null;
 
-        public SchedulerViewModel(IWorkSchedulerClient client)
+        public SchedulerViewModel(IWorkSchedulerClient client, INavigationService navigationService)
         {
             _client = client;
+            _navigationService = navigationService;
+        }
+
+        public async void Initialize(object parameter)
+        {
+            if(parameter is InputDetailsContact contact)
+            {
+                await AddSchedule(contact);
+            }
         }
 
         [RelayCommand]
@@ -41,7 +51,7 @@ namespace WorkScheduler.ViewModels
             SelectedAppointment = e?.Appointments is not null ? (SchedulerAppointment)e.Appointments.First() : null;
             if (SelectedAppointment is not null)
             {
-                EditScheduleAsync().Wait();
+                EditSchedule().Wait();
             }
         }
 
@@ -63,7 +73,7 @@ namespace WorkScheduler.ViewModels
         }
 
         [RelayCommand(CanExecute = nameof(IsSelected))]
-        private async Task EditScheduleAsync()
+        private async Task EditSchedule()
         {
             var info = SplitSubject(SelectedAppointment.Subject);
             var arg = new InputDetailsContact
@@ -74,7 +84,8 @@ namespace WorkScheduler.ViewModels
                 WorkingPlace = info.WorkingPlace
             };
 
-            var result = await Shell.Current.ShowPopupAsync(new InputDetails(arg));
+            //var result = await Shell.Current.ShowPopupAsync(new InputDetails(arg));
+            var result = await _navigationService.NavigateToInputDetail(arg);
             if (result is InputDetailsContact output)
             {
                 await AddSchedule(output);
@@ -82,7 +93,7 @@ namespace WorkScheduler.ViewModels
         }
 
         [RelayCommand(CanExecute = nameof(IsSelected))]
-        private async Task DeleteScheduleAsync()
+        private async Task DeleteSchedule()
         {
             await _client.DeleteScheduleAsync(SelectedAppointment.StartTime);
             await UpdateSchedule(_visibleDates);

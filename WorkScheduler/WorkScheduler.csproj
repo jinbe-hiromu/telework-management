@@ -58,11 +58,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Platforms\MacCatalyst\ScreenSizeGetter.cs">
+	    <ExcludeFromCurrentConfiguration>true</ExcludeFromCurrentConfiguration>
+	  </Compile>
 	  <Compile Update="Views\DataQueryView.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\HamburgerMenu.xaml.cs">
 	    <DependentUpon>HamburgerMenu.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\InputDetailsView.xaml.cs">
+	    <DependentUpon>InputDetailsView.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
@@ -71,6 +77,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\HamburgerMenu.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\InputDetailsView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\InputDetails.xaml">

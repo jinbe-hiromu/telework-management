@@ -1,4 +1,8 @@
-﻿using WorkScheduler.Views;
+﻿using CommunityToolkit.Maui.Views;
+using WorkScheduler.Models;
+using WorkScheduler.ViewModels;
+using WorkScheduler.Views;
+
 
 namespace WorkScheduler.Services;
 
@@ -17,6 +21,20 @@ internal class NavigationService : INavigationService
 
     public Task NavigateToMain() => NavigateTo<MainPage>();
 
+    public Task NavigateToLogin() => NavigateTo<LoginView>();
+
+    public async Task<object> NavigateToInputDetail(InputDetailsContact parameter)
+    {
+        var popup = _services.GetService<InputDetails>();
+        var vm = popup.BindingContext as InputDetailsViewModel;
+        vm.Initialize(parameter);
+
+        var screenSize = PopupSizeGetter.Get();
+        vm.Size = screenSize;
+
+        return await Shell.Current.ShowPopupAsync(popup);
+    } 
+
     public Task NavigateTo<T>() where T : Page
     {
         var page = ResolvePage<T>();
@@ -24,6 +42,8 @@ internal class NavigationService : INavigationService
     }
 
     public Page ResolvePage(Type type) => _services.GetService(type) as Page;
+
+    public Popup ResolvePopup(Type type) => _services.GetService(type) as Popup;
 
     public T ResolvePage<T>() where T : Page => _services.GetService<T>();
 }

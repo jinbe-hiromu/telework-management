@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using WorkScheduler.Services;
 using WorkScheduler.Models;
-using WorkScheduler.Services;
 
 namespace WorkScheduler.ViewModels
 {
