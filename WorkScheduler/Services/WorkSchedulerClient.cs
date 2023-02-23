@@ -1,9 +1,8 @@
-﻿using System.Diagnostics;
+﻿using RestSharp;
+using System.Diagnostics;
 using System.Net;
 using System.Security.Authentication;
-using RestSharp;
 using WorkScheduler.Models;
-using WorkScheduler.Services.Interfaces;
 
 namespace WorkScheduler.Services
 {
