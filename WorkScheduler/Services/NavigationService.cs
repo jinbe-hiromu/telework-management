@@ -28,10 +28,6 @@ internal class NavigationService : INavigationService
         var popup = _services.GetService<InputDetails>();
         var vm = popup.BindingContext as InputDetailsViewModel;
         vm.Initialize(parameter);
-
-        var screenSize = PopupSizeGetter.Get();
-        vm.Size = screenSize;
-
         return await Shell.Current.ShowPopupAsync(popup);
     } 
 

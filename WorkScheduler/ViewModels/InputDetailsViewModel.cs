@@ -40,9 +40,7 @@ public partial class InputDetailsViewModel : ObservableObject, IParameterAware
     public ObservableCollection<string> WorkStyles { get; } = new();
     public ObservableCollection<string> WorkingPlaces { get; } = new();
     public bool IsOkEnabled => StartTime < EndTime;
-
-    [ObservableProperty]
-    public Size _size;
+    public Size Size = PopupSizeGetter.Get();
 
     [ObservableProperty]
     private DateTime _date;

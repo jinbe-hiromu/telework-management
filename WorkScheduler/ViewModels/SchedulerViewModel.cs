@@ -16,6 +16,7 @@ namespace WorkScheduler.ViewModels
         private IList<DateTime> _visibleDates;
         private IWorkSchedulerClient _client;
         private readonly INavigationService _navigationService;
+
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(EditScheduleCommand))]
         [NotifyCanExecuteChangedFor(nameof(DeleteScheduleCommand))]
